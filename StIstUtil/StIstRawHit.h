@@ -6,17 +6,6 @@
 ****************************************************************************
 * Description:
 * Data structure for individual IST pad (channel).
-****************************************************************************
-*
-* $Log$
-* Revision 1.3  2014/02/03 16:12:20  ypwang
-* updating scripts
-*
-*
-****************************************************************************
-* StIstRawHit.h,v 1.0
-* Revision 1.0 2013/11/04 15:05:30 Yaping
-* Initial version
 ****************************************************************************/
 
 #ifndef StIstRawHit_hh
@@ -79,4 +68,22 @@ private:
 struct rawHitPtrLessThan {
    bool operator() (const StIstRawHit *rawHit1, const StIstRawHit *rawHit2) const;
 };
+
 #endif
+
+
+/***************************************************************************
+*
+* $Log$
+* Revision 1.4  2014/02/13 02:35:49  smirnovd
+* Moved CVS log to the bottom of the file
+*
+* Revision 1.3  2014/02/03 16:12:20  ypwang
+* updating scripts
+*
+*
+****************************************************************************
+* StIstRawHit.h,v 1.0
+* Revision 1.0 2013/11/04 15:05:30 Yaping
+* Initial version
+****************************************************************************/
