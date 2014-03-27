@@ -71,10 +71,12 @@ void StIstRawHitCollection::Clear( Option_t *opt )
 StIstRawHit *StIstRawHitCollection::getRawHit( int elecId )
 {
    StIstRawHit *&rawHitPtr = mRawHitElecIdVec[elecId];
+
    if ( !rawHitPtr ) {
       rawHitPtr = new StIstRawHit();
       mRawHitVec.push_back( rawHitPtr );
    }
+
    return rawHitPtr;
 };
 
@@ -83,6 +85,9 @@ ClassImp(StIstRawHitCollection);
 
 /***************************************************************************
 * $Log$
+* Revision 1.14  2014/03/27 22:46:47  smirnovd
+* Updated broken style with astyle -s3 -p -H -A3 -k3 -O -o -y -Y -f
+*
 * Revision 1.13  2014/02/24 14:49:23  ypwang
 * update Clear( Option_t *opt ) to delete StIstRawHit objects from mRawHitVec
 *
