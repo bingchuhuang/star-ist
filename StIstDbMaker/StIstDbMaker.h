@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.9  2014/03/27 22:46:55  smirnovd
+* Remove unnecessary protection
+*
 * Revision 1.8  2014/03/27 22:46:38  smirnovd
 * Renamed static data member according to mixed star/root convention
 *
@@ -31,10 +34,9 @@
 #ifndef StIstDbMaker_hh
 #define StIstDbMaker_hh
 
-#ifndef StMaker_H
 #include "StMaker.h"
-#endif
 #include "THashList.h"
+
 class TDataSet;
 
 class StIstDbMaker : public StMaker
@@ -63,4 +65,5 @@ private:
 
    ClassDef(StIstDbMaker, 0)
 };
+
 #endif
