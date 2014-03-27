@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.8  2014/03/27 22:46:38  smirnovd
+* Renamed static data member according to mixed star/root convention
+*
 * Revision 1.7  2014/03/25 03:01:57  ypwang
 * get rid of GetIstPedNoise(), GetIstGain(), GetIstMapping() and GetIstControl() functions; use TDataSet instead of Db table structure
 *
@@ -40,7 +43,7 @@ class StIstDbMaker : public StMaker
 public:
    StIstDbMaker(const char *name = "istDb");
    Int_t  InitRun(Int_t runNumber);
-   THashList *GetRotations() 	{return fRotList; }
+   THashList *GetRotations() 	{return mgRotList; }
    const TDataSet *GetPedNoise() {return mPedNoise;}
    const TDataSet *GetGain()     {return mGain;    }
    const TDataSet *GetMapping()  {return mMapping; }
@@ -52,7 +55,7 @@ public:
 private:
    Int_t CalculateSensorsPosition();
 
-   static THashList *fRotList;
+   static THashList *mgRotList;
    const TDataSet *mPedNoise;
    const TDataSet *mGain;
    const TDataSet *mMapping;
