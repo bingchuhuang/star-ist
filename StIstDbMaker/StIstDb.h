@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.3  2014/07/31 21:01:29  smirnovd
+* Set class version to 1 as version 0 has a special meaning in root cint world
+*
 * Revision 1.2  2014/07/31 21:01:21  smirnovd
 * Made class getters const because we change nothing in the object
 *
@@ -65,7 +68,7 @@ private:
    istControl_st 	*mIstControl;
    istChipConfig_st 	*mIstChipStatus;
 
-   ClassDef(StIstDb, 0)
+   ClassDef(StIstDb, 1)
 };
 
 #endif

@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.14  2014/07/31 21:01:29  smirnovd
+* Set class version to 1 as version 0 has a special meaning in root cint world
+*
 * Revision 1.13  2014/07/31 21:00:36  ypwang
 * c++ format style improvements; virtual keyword added for destructor
 *
@@ -64,7 +67,7 @@ public:
 private:
    StIstDb *mIstDb;
 
-   ClassDef(StIstDbMaker, 0)
+   ClassDef(StIstDbMaker, 1)
 };
 
 #endif
