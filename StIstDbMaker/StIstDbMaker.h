@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.13  2014/07/31 21:00:36  ypwang
+* c++ format style improvements; virtual keyword added for destructor
+*
 * Revision 1.12  2014/07/31 18:24:03  ypwang
 * add destructor and deallocate the mIstDb; c++ formatting style improvements and formatted with astyle -s3 -p -H -A3 -k3 -O -o -y -Y -f
 *
@@ -52,7 +55,7 @@ class StIstDbMaker : public StMaker
 
 public:
    StIstDbMaker(const char *name = "istDb");
-   ~StIstDbMaker();
+   virtual ~StIstDbMaker();
    Int_t  InitRun(Int_t runNumber);
 
    virtual const char *GetCVS() const
