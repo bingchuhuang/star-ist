@@ -9,8 +9,14 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.12  2014/07/31 18:24:03  ypwang
+* add destructor and deallocate the mIstDb; c++ formatting style improvements and formatted with astyle -s3 -p -H -A3 -k3 -O -o -y -Y -f
+*
 * Revision 1.11  2014/07/29 19:50:25  ypwang
 * IST DB dataset in order to separate from IST Db maker
+*
+* Revision 1.10  2014/07/15 23:17:52  smirnovd
+* Improved doxygen documentation
 *
 * Revision 1.9  2014/03/27 22:46:55  smirnovd
 * Remove unnecessary protection
@@ -46,6 +52,7 @@ class StIstDbMaker : public StMaker
 
 public:
    StIstDbMaker(const char *name = "istDb");
+   ~StIstDbMaker();
    Int_t  InitRun(Int_t runNumber);
 
    virtual const char *GetCVS() const
