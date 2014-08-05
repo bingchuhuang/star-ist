@@ -9,6 +9,9 @@
 ****************************************************************************
 *
 * $Log$
+* Revision 1.5  2014/08/05 17:48:58  ypwang
+* update Print() function to PrintGeoHMatrices()
+*
 * Revision 1.4  2014/08/01 22:25:48  ypwang
 * Add several simple getters and data members for sub-level geometry matrices obtain; Add Print() function which print out all IST geometry matrices
 *
@@ -70,7 +73,7 @@ public:
    void SetControl(istControl_st *control)    	{mIstControl  = control;}
    void SetChipStatus(istChipConfig_st *chipStatus) {mIstChipStatus = chipStatus;}
 
-   void Print() const;
+   void PrintGeoHMatrices() const;
 
    virtual const char *GetCVS() const
    {static const char cvs[] = "Tag $Name$ $Id$ built "__DATE__" "__TIME__ ; return cvs;}
