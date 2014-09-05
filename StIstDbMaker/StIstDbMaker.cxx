@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id$
+* $Id: StIstDbMaker.cxx,v 1.17 2014/08/06 18:44:21 ypwang Exp $
 *
 * Author: Yaping Wang, June 2013
 ****************************************************************************
@@ -8,7 +8,7 @@
 * See header file.
 ****************************************************************************
 *
-* $Log$
+* $Log: StIstDbMaker.cxx,v $
 * Revision 1.17  2014/08/06 18:44:21  ypwang
 * replace assert statement for gStTpcDb with normal variable check and LOG_WARN printout; non-ROOT methods formatted with STAR coding style
 *

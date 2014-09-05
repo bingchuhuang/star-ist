@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id$
+* $Id: StIstDb.h,v 1.7 2014/08/06 18:44:21 ypwang Exp $
 *
 * Author: Yaping Wang, June 2013
 ****************************************************************************
@@ -8,7 +8,7 @@
 * IST calibration/geometry DBs access maker.
 ****************************************************************************
 *
-* $Log$
+* $Log: StIstDb.h,v $
 * Revision 1.7  2014/08/06 18:44:21  ypwang
 * replace assert statement for gStTpcDb with normal variable check and LOG_WARN printout; non-ROOT methods formatted with STAR coding style
 *
@@ -82,7 +82,7 @@ public:
    void printGeoHMatrices() const;
 
    virtual const char *GetCVS() const
-   {static const char cvs[] = "Tag $Name$ $Id$ built " __DATE__ " " __TIME__ ; return cvs;}
+   {static const char cvs[] = "Tag $Name:  $ $Id: StIstDb.h,v 1.7 2014/08/06 18:44:21 ypwang Exp $ built " __DATE__ " " __TIME__ ; return cvs;}
 
 private:
    static THashList 	*mgRotList;
