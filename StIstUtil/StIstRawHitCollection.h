@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id$
+* $Id: StIstRawHitCollection.h,v 1.6 2014/09/08 19:06:57 smirnovd Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -39,6 +39,8 @@ public:
 
    //clear
    void Clear( Option_t *opt = "" );
+   using StObject::Print;
+   void Print(int nTimeBins) const;
 
    //get pointer to a raw hit by channel ID
    StIstRawHit *getRawHit( int elecId );
@@ -63,7 +65,10 @@ private:
 
 /***************************************************************************
 *
-* $Log$
+* $Log: StIstRawHitCollection.h,v $
+* Revision 1.6  2014/09/08 19:06:57  smirnovd
+* Added Print() methods to print out properties of StIstCluster and StIstRawHit objects and their respective collections
+*
 * Revision 1.5  2014/02/24 14:24:40  ypwang
 * get rid of StIstRawHitCollection::removeFlagged()
 *
