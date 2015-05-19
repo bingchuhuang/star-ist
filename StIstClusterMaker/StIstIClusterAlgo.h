@@ -1,6 +1,8 @@
 #ifndef StIstIClusterAlgo_hh
 #define StIstIClusterAlgo_hh
 
+#include <climits>
+
 #include "Stypes.h"
 #include "StRoot/StIstUtil/StIstCollection.h"
 
@@ -21,7 +23,7 @@ public:
 
    virtual ~StIstIClusterAlgo() = 0;
 
-   void setUsedTimeBin(unsigned char tb = -1) { mTimeBin = tb; }
+   void setUsedTimeBin(unsigned char tb = UCHAR_MAX) { mTimeBin = tb; }
    void setSplitFlag( bool splitFlag = true)  { mSplitCluster = splitFlag; }
 
 protected:

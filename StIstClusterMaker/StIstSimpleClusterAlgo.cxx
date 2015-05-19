@@ -23,7 +23,7 @@ Int_t StIstSimpleClusterAlgo::splitCluster(int cSize, int clusterSizeList[], StI
 
    StIstCluster *newClusterTmp = 0;
 
-   char maxTb = -1;
+   unsigned char maxTb = UCHAR_MAX;
    unsigned char ladder = 0, sensor = 0;
    float meanRow = 0, meanColumn = 0;
    float totCharge = 0., totChargeErr = 0.;
@@ -625,7 +625,7 @@ Int_t StIstSimpleClusterAlgo::doSplitting(StIstClusterCollection &clusters, unsi
 
 Int_t StIstSimpleClusterAlgo::doClustering(const StIstCollection &istCollection, StIstRawHitCollection &rawHitsOriginal, StIstClusterCollection &clusters )
 {
-   char maxTb = -1, usedTb = -1;
+   unsigned char maxTb = UCHAR_MAX, usedTb = UCHAR_MAX;
    unsigned char ladder = 0, sensor = 0, column = 0, row = 0;
    float meanRow = 0., meanColumn = 0.;
    float totCharge = 0., totChargeErr = 0.;
