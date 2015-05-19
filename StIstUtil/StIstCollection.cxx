@@ -32,12 +32,12 @@ StIstCollection::~StIstCollection()
    }
 };
 
-size_t StIstCollection::getNumTimeBins() const
+unsigned char StIstCollection::getNumTimeBins() const
 {
    return mNumTimeBins;
 };
 
-void StIstCollection::setNumTimeBins(size_t nTimeBins)
+void StIstCollection::setNumTimeBins(unsigned char nTimeBins)
 {
    mNumTimeBins = nTimeBins;
 };
