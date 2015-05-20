@@ -23,7 +23,7 @@ Int_t StIstSimpleClusterAlgo::splitCluster(int cSize, int clusterSizeList[], StI
 
    StIstCluster *newClusterTmp = 0;
 
-   char maxTb = -1;
+   unsigned char maxTb = UCHAR_MAX;
    unsigned char ladder = 0, sensor = 0;
    float meanRow = 0, meanColumn = 0;
    float totCharge = 0., totChargeErr = 0.;
@@ -41,7 +41,7 @@ Int_t StIstSimpleClusterAlgo::splitCluster(int cSize, int clusterSizeList[], StI
 
       unsigned char tmpRawHitMaxTb0, tmpRawHitMaxTb1, tmpRawHitMaxTb2;
 
-      if (mTimeBin >= 0 && mTimeBin < numTimeBins) {
+      if (mTimeBin < numTimeBins) {
          tmpRawHitMaxTb0 = tmpRawHitMaxTb1 = tmpRawHitMaxTb2 = mTimeBin;
       }
       else {
@@ -123,7 +123,7 @@ Int_t StIstSimpleClusterAlgo::splitCluster(int cSize, int clusterSizeList[], StI
 
       unsigned char tmpRawHitMaxTb0, tmpRawHitMaxTb1, tmpRawHitMaxTb2, tmpRawHitMaxTb3;
 
-      if (mTimeBin >= 0 && mTimeBin < numTimeBins) {
+      if (mTimeBin < numTimeBins) {
          tmpRawHitMaxTb0 = tmpRawHitMaxTb1 = tmpRawHitMaxTb2 = tmpRawHitMaxTb3 = mTimeBin;
       }
       else {
@@ -221,7 +221,7 @@ Int_t StIstSimpleClusterAlgo::doSplitting(StIstClusterCollection &clusters, unsi
          for (std::vector< StIstRawHit * >::iterator rawHitVecIt = (*clusterIt)->getRawHitVec().begin(); index < 3 && rawHitVecIt != (*clusterIt)->getRawHitVec().end(); rawHitVecIt++)      {
             rawHitPtr[index]        = *rawHitVecIt;
 
-            if (mTimeBin >= 0 && mTimeBin < numTimeBins) {
+            if (mTimeBin < numTimeBins) {
                tmpRawHitMaxTb[index]   = mTimeBin;
             }
             else {
@@ -301,7 +301,7 @@ Int_t StIstSimpleClusterAlgo::doSplitting(StIstClusterCollection &clusters, unsi
          for (std::vector< StIstRawHit * >::iterator rawHitVecIt = (*clusterIt)->getRawHitVec().begin(); index < 4 && rawHitVecIt != (*clusterIt)->getRawHitVec().end(); rawHitVecIt++)      {
             rawHitPtr[index]        = *rawHitVecIt;
 
-            if (mTimeBin >= 0 && mTimeBin < numTimeBins) {
+            if (mTimeBin < numTimeBins) {
                tmpRawHitMaxTb[index]   = mTimeBin;
             }
             else {
@@ -625,7 +625,7 @@ Int_t StIstSimpleClusterAlgo::doSplitting(StIstClusterCollection &clusters, unsi
 
 Int_t StIstSimpleClusterAlgo::doClustering(const StIstCollection &istCollection, StIstRawHitCollection &rawHitsOriginal, StIstClusterCollection &clusters )
 {
-   char maxTb = -1, usedTb = -1;
+   unsigned char maxTb = UCHAR_MAX, usedTb = UCHAR_MAX;
    unsigned char ladder = 0, sensor = 0, column = 0, row = 0;
    float meanRow = 0., meanColumn = 0.;
    float totCharge = 0., totChargeErr = 0.;
@@ -652,9 +652,9 @@ Int_t StIstSimpleClusterAlgo::doClustering(const StIstCollection &istCollection,
       //first raw hit
       maxTb       = (*rawHitIt)->getMaxTimeBin();
 
-      if (maxTb < 0 || maxTb >= nTimeBins)   maxTb = (*rawHitIt)->getDefaultTimeBin();
+      if (maxTb >= nTimeBins)   maxTb = (*rawHitIt)->getDefaultTimeBin();
 
-      if (mTimeBin >= 0 && mTimeBin < nTimeBins) {
+      if (mTimeBin < nTimeBins) {
          usedTb  = mTimeBin;
       }
       else
@@ -713,7 +713,7 @@ Int_t StIstSimpleClusterAlgo::doClustering(const StIstCollection &istCollection,
 
                      maxTb  = (*clusterIt)->getMaxTimeBin();
 
-                     if (mTimeBin >= 0 && mTimeBin < nTimeBins) {
+                     if (mTimeBin < nTimeBins) {
                         usedTb = mTimeBin;
                      }
                      else

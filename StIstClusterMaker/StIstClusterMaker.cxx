@@ -1,3 +1,5 @@
+#include <climits>
+
 #include "StIstClusterMaker.h"
 #include "StEvent.h"
 #include "StEvent/StEnumerations.h"
@@ -10,7 +12,7 @@
 #include "StRoot/StIstClusterMaker/StIstIClusterAlgo.h"
 #include "StRoot/StIstClusterMaker/StIstScanClusterAlgo.h"
 
-StIstClusterMaker::StIstClusterMaker( const char *name ) : StMaker(name), mIstCollectionPtr(0), mClusterAlgoPtr(0), mTimeBin(-1), mSplitCluster(true)
+StIstClusterMaker::StIstClusterMaker( const char *name ) : StMaker(name), mIstCollectionPtr(0), mClusterAlgoPtr(0), mTimeBin(UCHAR_MAX), mSplitCluster(true)
 {
    /* nothing to do */
 };

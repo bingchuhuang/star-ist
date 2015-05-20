@@ -1,6 +1,8 @@
 #ifndef StIstClusterMaker_hh
 #define StIstClusterMaker_hh
 
+#include <climits>
+
 #include "StMaker.h"
 #include "StIstIClusterAlgo.h"
 
@@ -25,7 +27,7 @@ public:
    void Clear( Option_t *opts = "" );
 
    void setClusterAlgo(StIstIClusterAlgo *);
-   void setUsedTimeBin(unsigned char tb=-1) { mTimeBin = tb; }
+   void setUsedTimeBin(unsigned char tb=UCHAR_MAX) { mTimeBin = tb; }
    void setClusterSplitFlag(bool splitFlag=true) { mSplitCluster = splitFlag; }
 
    virtual const char *GetCVS() const

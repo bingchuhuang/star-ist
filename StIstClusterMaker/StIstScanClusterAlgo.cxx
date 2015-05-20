@@ -116,7 +116,7 @@ Int_t StIstScanClusterAlgo::doClustering(const StIstCollection &istCollection, S
 
             if (maxTb < 0 || maxTb >= nTimeBins)         maxTb  = rawHitMaxAdcTemp->getDefaultTimeBin();
 
-            if (mTimeBin >= 0 && mTimeBin < nTimeBins)   usedTb = mTimeBin;
+            if (mTimeBin < nTimeBins)                    usedTb = mTimeBin;
             else                                         usedTb = maxTb;
 
             ladder      	= rawHitMaxAdcTemp->getLadder();

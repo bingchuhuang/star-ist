@@ -27,8 +27,8 @@ public:
    size_t getNumRawHits( int ladder) const;      // per ladder
    size_t getNumClusters() const;                  // overall
    size_t getNumClusters( int ladder ) const;    // per ladder
-   size_t getNumTimeBins() const;
-   void setNumTimeBins(size_t nTimebin);
+   unsigned char getNumTimeBins() const;
+   void setNumTimeBins(unsigned char nTimebin);
 
    StIstRawHitCollection *getRawHitCollection( int ladder );
    const StIstRawHitCollection *getRawHitCollection( int ladder ) const;
@@ -39,7 +39,7 @@ public:
 protected:
    StIstRawHitCollection mRawHitCollection[kIstNumLadders];
    StIstClusterCollection mClusterCollection[kIstNumLadders];
-   size_t mNumTimeBins;
+   unsigned char mNumTimeBins;
 
    ClassDef(StIstCollection, 1);
 };
