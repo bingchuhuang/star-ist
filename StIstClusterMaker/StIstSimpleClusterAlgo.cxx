@@ -822,6 +822,14 @@ Int_t StIstSimpleClusterAlgo::doClustering(const StIstCollection &istCollection,
 /***************************************************************************
 *
 * $Log: StIstSimpleClusterAlgo.cxx,v $
+* Revision 1.17  2015/05/20 20:53:57  smirnovd
+* Removed a priori true condition without changing the logic
+*
+* mTimeBin is unsigned char always >= 0
+*
+* Revision 1.16  2015/05/20 20:53:53  smirnovd
+* Set default value of unsigned variables in a more explicit way
+*
 * Revision 1.15  2015/05/20 20:08:06  huangbc
 * change unsigned char maxTb = -1 to char maxTb = -1.
 *

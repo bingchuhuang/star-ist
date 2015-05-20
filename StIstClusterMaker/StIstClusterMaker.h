@@ -31,7 +31,7 @@ public:
    void setClusterSplitFlag(bool splitFlag=true) { mSplitCluster = splitFlag; }
 
    virtual const char *GetCVS() const
-   {static const char cvs[] = "Tag $Name:  $ $Id: StIstClusterMaker.h,v 1.13 2014/09/17 20:33:32 smirnovd Exp $ built "__DATE__" "__TIME__ ; return cvs;}
+   {static const char cvs[] = "Tag $Name:  $ $Id: StIstClusterMaker.h,v 1.14 2015/05/20 20:53:53 smirnovd Exp $ built "__DATE__" "__TIME__ ; return cvs;}
 
 protected:
    StIstCollection *mIstCollectionPtr;
@@ -49,6 +49,9 @@ protected:
 /***************************************************************************
 *
 * $Log: StIstClusterMaker.h,v $
+* Revision 1.14  2015/05/20 20:53:53  smirnovd
+* Set default value of unsigned variables in a more explicit way
+*
 * Revision 1.13  2014/09/17 20:33:32  smirnovd
 * Squashed commit of the following:
 *

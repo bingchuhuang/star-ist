@@ -39,6 +39,9 @@ protected:
 
 /***************************************************************************
 * $Log: StIstIClusterAlgo.h,v $
+* Revision 1.13  2015/05/20 20:53:53  smirnovd
+* Set default value of unsigned variables in a more explicit way
+*
 * Revision 1.12  2014/09/17 20:39:45  smirnovd
 * Squashed commit of the following:
 *

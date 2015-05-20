@@ -109,6 +109,9 @@ ClassImp(StIstClusterMaker);
 /***************************************************************************
 *
 * $Log: StIstClusterMaker.cxx,v $
+* Revision 1.30  2015/05/20 20:53:53  smirnovd
+* Set default value of unsigned variables in a more explicit way
+*
 * Revision 1.29  2014/10/14 21:06:40  smirnovd
 * Updated debug and log messages, added doxygen comments. Also other minor whitespace and style changes
 *
