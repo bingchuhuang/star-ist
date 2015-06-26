@@ -3,7 +3,7 @@
 #ifndef StIstDbMaker_hh
 #define StIstDbMaker_hh
 
-#include "StMaker.h"
+#include "StChain/StMaker.h"
 
 class StIstDb;
 

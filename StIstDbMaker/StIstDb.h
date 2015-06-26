@@ -3,7 +3,7 @@
 #ifndef StIstDb_hh
 #define StIstDb_hh
 
-#include "StObject.h"
+#include "St_base/StObject.h"
 #include "THashList.h"
 #include "TGeoMatrix.h"
 #include "StEvent/StEnumerations.h"

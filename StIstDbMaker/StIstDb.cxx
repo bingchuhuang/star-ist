@@ -1,8 +1,8 @@
 /* $Id: StIstDb.cxx,v 1.13 2014/12/17 19:37:47 smirnovd Exp $ */
 
 #include <assert.h>
-#include "StIstDb.h"
-#include "StMessMgr.h"
+#include "StIstDbMaker/StIstDb.h"
+#include "St_base/StMessMgr.h"
 #include "StTpcDb/StTpcDb.h"
 #include "St_db_Maker/St_db_Maker.h"
 
