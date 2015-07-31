@@ -50,7 +50,7 @@ public:
    const TGeoHMatrix *getGeoHMatrixIstOnPst() const     	{return &mGeoHMatrixIstOnPst; }
    const TGeoHMatrix *getGeoHMatrixLadderOnIst(Int_t ladder) const     {return &mGeoHMatrixLadderOnIst[ladder - 1]; }
    const TGeoHMatrix *getGeoHMatrixSensorOnLadder(Int_t ladder, Int_t sensor) const	{return &mGeoHMatrixSensorOnLadder[ladder - 1][sensor - 1]; }
-   static const TGeoHMatrix* getHMatrixSensorOnGlobal(int ladder, int sensor);
+   static const TGeoHMatrix *getHMatrixSensorOnGlobal(int ladder, int sensor);
 
    const istPedNoise_st *getPedNoise() const 		{return mIstPedNoise;}
    const istGain_st *getGain() const     		{return mIstGain;    }

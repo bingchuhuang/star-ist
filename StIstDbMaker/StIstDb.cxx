@@ -42,12 +42,13 @@ Int_t StIstDb::setGeoHMatrices(Survey_st **tables)
 
    //get TPC positionement relative to STAR
    if (gStTpcDb) {
-   	mGeoHMatrixTpcOnGlobal = (TGeoHMatrix *)&gStTpcDb->Tpc2GlobalMatrix();
+      mGeoHMatrixTpcOnGlobal = (TGeoHMatrix *)&gStTpcDb->Tpc2GlobalMatrix();
    }
    else {
-	if (mGeoHMatrixTpcOnGlobal) delete mGeoHMatrixTpcOnGlobal;
-        mGeoHMatrixTpcOnGlobal = new TGeoHMatrix("tpcOnGlobal");
-        LOG_WARN << "No gStTpcDb, use null transformation for tpc on global" << endm;
+      if (mGeoHMatrixTpcOnGlobal) delete mGeoHMatrixTpcOnGlobal;
+
+      mGeoHMatrixTpcOnGlobal = new TGeoHMatrix("tpcOnGlobal");
+      LOG_WARN << "No gStTpcDb, use null transformation for tpc on global" << endm;
    }
 
    //obtain IST geomery tables
@@ -130,13 +131,13 @@ Int_t StIstDb::setGeoHMatrices(Survey_st **tables)
  * local coordinate system to the global one. The ladder and sensor id-s are
  * expected to follow the human friendly numbering scheme, i.e. >= 1.
  */
-const TGeoHMatrix* StIstDb::getHMatrixSensorOnGlobal(int ladder, int sensor)
+const TGeoHMatrix *StIstDb::getHMatrixSensorOnGlobal(int ladder, int sensor)
 {
    if (ladder < 1 || ladder > kIstNumLadders || sensor < 1 || sensor > kIstNumSensorsPerLadder)
       return 0;
 
-   int id = 1000 + (ladder-1)*kIstNumSensorsPerLadder + sensor;
-   return mgRotList ? (const TGeoHMatrix*) mgRotList->FindObject(Form("R%04i", id)) : 0;
+   int id = 1000 + (ladder - 1) * kIstNumSensorsPerLadder + sensor;
+   return mgRotList ? (const TGeoHMatrix *) mgRotList->FindObject(Form("R%04i", id)) : 0;
 }
 
 
