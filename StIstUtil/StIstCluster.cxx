@@ -15,7 +15,7 @@
 
 StIstCluster::StIstCluster(int key, int ladder, int sensor,
                            float meanRow, float meanColumn, float totCharge, float totChargeErr,
-           		   int clusteringType):
+                           int clusteringType):
    mKey(key),
    mMeanRow(meanRow),
    mMeanColumn(meanColumn),
