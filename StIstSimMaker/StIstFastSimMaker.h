@@ -23,7 +23,7 @@ class StIstFastSimMaker : public StMaker
 {
 public:
 
-   StIstFastSimMaker(const Char_t *name = "istFastSim", bool useRandomSeed = false);
+   StIstFastSimMaker(const Char_t *name = "istFastSim", bool useRandomSeed=false);
    Int_t Init();
    /// Retrieve GEANT hit information then transfer hit position to ideal or misaligned geometry of
    /// realistic IST detector
