@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id: StIstRawHitMaker.cxx,v 1.31 2015/02/27 15:48:34 ypwang Exp $
+* $Id: StIstRawHitMaker.cxx,v 1.32 2015/08/03 14:26:03 smirnovd Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -471,6 +471,9 @@ ClassImp(StIstRawHitMaker);
 /***************************************************************************
 *
 * $Log: StIstRawHitMaker.cxx,v $
+* Revision 1.32  2015/08/03 14:26:03  smirnovd
+* Corrected style with 'astyle -s3 -p -H -A3 -k3 -O -o -y -Y -f'
+*
 * Revision 1.31  2015/02/27 15:48:34  ypwang
 * Make sure the corrected ADC value is positive
 *

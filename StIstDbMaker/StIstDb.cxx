@@ -1,4 +1,4 @@
-/* $Id: StIstDb.cxx,v 1.13 2014/12/17 19:37:47 smirnovd Exp $ */
+/* $Id: StIstDb.cxx,v 1.14 2015/08/03 14:26:03 smirnovd Exp $ */
 
 #include <assert.h>
 #include "StIstDbMaker/StIstDb.h"
@@ -168,6 +168,9 @@ void StIstDb::Print(Option_t *opt) const
 /***************************************************************************
 *
 * $Log: StIstDb.cxx,v $
+* Revision 1.14  2015/08/03 14:26:03  smirnovd
+* Corrected style with 'astyle -s3 -p -H -A3 -k3 -O -o -y -Y -f'
+*
 * Revision 1.13  2014/12/17 19:37:47  smirnovd
 * StiIstDb: Corrected mapping of ladder/sensor to global aggregate sensor id.
 *
