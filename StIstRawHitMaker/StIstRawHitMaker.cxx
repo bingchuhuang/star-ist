@@ -40,12 +40,12 @@ StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", n
    mGainVec.resize( kIstNumElecIds );
    mMappingVec.resize( kIstNumElecIds );
    mConfigVec.resize( kIstNumApvs, 1 );
-};
+}
 
 StIstRawHitMaker::~StIstRawHitMaker()
 {
    delete mIstCollectionPtr; mIstCollectionPtr = 0;
-};
+}
 
 
 /*!
@@ -69,7 +69,7 @@ Int_t StIstRawHitMaker::Init()
    }
 
    return ierr;
-};
+}
 
 
 /*!
@@ -183,7 +183,7 @@ Int_t StIstRawHitMaker::InitRun(Int_t runnumber)
    }
 
    return ierr;
-};
+}
 
 
 /*!
@@ -485,7 +485,7 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
          LOG_WARN << "StIstRawHitMaker::Make() -- Could not access rawHitCollection for ladder " << ladder << endm;
       }
    } //end single APV chip hits filling
-};
+}
 
 void StIstRawHitMaker::FillRawHitCollectionFromSimData()
 {
@@ -516,9 +516,9 @@ void StIstRawHitMaker::Clear( Option_t *opts )
          mIstCollectionPtr->getRawHitCollection(i)->Clear( "" );
       }
    }
-};
+}
 
-ClassImp(StIstRawHitMaker);
+ClassImp(StIstRawHitMaker)
 
 
 /***************************************************************************
