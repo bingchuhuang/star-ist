@@ -58,7 +58,7 @@ protected:
    UChar_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
    UShort_t mMinNumOfRawHits, mMaxNumOfRawHits;
 
-   StIstCollection *mIstCollectionPtr;
+   StIstCollection *mIstCollectionPtr; //raw ADC container from real data
 
    std::vector< float > mCmnVec; ///< APV chip geom. index, common mode (CM) noise
    std::vector< float > mPedVec; ///< Channel elec. index, pedestal
