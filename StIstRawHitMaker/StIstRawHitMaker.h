@@ -43,6 +43,7 @@ public:
    void setCmnCut(float cmnCut = 3.)			{ mCmnCut = cmnCut;        };
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
    void setDataType(int nDataType = 0)		{ mDataType = nDataType;   };
+   void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
 
    // Get CVS
    virtual const char *GetCVS() const {
@@ -52,6 +53,7 @@ public:
 
 protected:
    Bool_t mIsCaliMode;
+   Bool_t mDoEmbedding;
    Bool_t mDoCmnCorrection;
    //control paramters
    Float_t mHitCut, mCmnCut, mChanMinRmsNoiseLevel, mChanMaxRmsNoiseLevel, mApvMaxCmNoiseLevel;
