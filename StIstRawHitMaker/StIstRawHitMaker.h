@@ -61,6 +61,7 @@ protected:
    UShort_t mMinNumOfRawHits, mMaxNumOfRawHits;
 
    StIstCollection *mIstCollectionPtr;
+	StIstCollection *mIstCollectionSimuPtr;
 
    std::vector< float > mCmnVec; ///< APV chip geom. index, common mode (CM) noise
    std::vector< float > mPedVec; ///< Channel elec. index, pedestal

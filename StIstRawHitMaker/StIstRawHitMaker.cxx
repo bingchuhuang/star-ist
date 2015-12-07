@@ -31,7 +31,7 @@
 #include <string.h>
 #include <time.h>
 
-StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", name ), mIsCaliMode(false), mDoEmbedding(false), mDoCmnCorrection(0), mIstCollectionPtr(0), mDataType(2)
+StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", name ), mIsCaliMode(false), mDoEmbedding(false), mDoCmnCorrection(0), mIstCollectionPtr(0), mIstCollectionSimuPtr(NULL), mDataType(2)
 {
    // set all vectors to zeros
    mCmnVec.resize( kIstNumApvs );
