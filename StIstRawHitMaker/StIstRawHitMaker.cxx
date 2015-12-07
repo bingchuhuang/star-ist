@@ -40,12 +40,12 @@ StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", n
    mGainVec.resize( kIstNumElecIds );
    mMappingVec.resize( kIstNumElecIds );
    mConfigVec.resize( kIstNumApvs, 1 );
-};
+}
 
 StIstRawHitMaker::~StIstRawHitMaker()
 {
    delete mIstCollectionPtr; mIstCollectionPtr = 0;
-};
+}
 
 
 /*!
@@ -69,7 +69,7 @@ Int_t StIstRawHitMaker::Init()
    }
 
    return ierr;
-};
+}
 
 
 /*!
@@ -183,7 +183,7 @@ Int_t StIstRawHitMaker::InitRun(Int_t runnumber)
    }
 
    return ierr;
-};
+}
 
 
 /*!
@@ -264,7 +264,6 @@ Int_t StIstRawHitMaker::Make()
       Float_t sumAdcPerEvent[kIstNumTimeBins];
       Int_t counterAdcPerEvent[kIstNumTimeBins];
 
-      //for (int n = 0; n < ntimebin; n++)  {
       for (int n = 0; n < kIstNumTimeBins; n++)  {
          sumAdcPerEvent[n]     = 0.;
          counterAdcPerEvent[n] = 0 ;
@@ -452,7 +451,7 @@ Int_t StIstRawHitMaker::Make()
    }//end while
 
    return ierr;
-};
+}
 
 void StIstRawHitMaker::Clear( Option_t *opts )
 {
@@ -461,9 +460,9 @@ void StIstRawHitMaker::Clear( Option_t *opts )
          mIstCollectionPtr->getRawHitCollection(i)->Clear( "" );
       }
    }
-};
+}
 
-ClassImp(StIstRawHitMaker);
+ClassImp(StIstRawHitMaker)
 
 
 /***************************************************************************
