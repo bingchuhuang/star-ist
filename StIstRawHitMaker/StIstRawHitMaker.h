@@ -37,12 +37,13 @@ public:
    Int_t Make();
    void Clear( Option_t *opts = "" );
 
-   void setIsCalibrationMode( bool isCaliMode = false )   { mIsCaliMode = isCaliMode;};
-   void setHitCut(float hitCut = 5.)			{ mHitCut = hitCut;        };
-   void setCmnCorrection( bool doCmnCorrection = false )	{ mDoCmnCorrection = doCmnCorrection; };
-   void setCmnCut(float cmnCut = 3.)			{ mCmnCut = cmnCut;        };
+   void setIsCalibrationMode( bool isCaliMode = false )   { mIsCaliMode = isCaliMode;}
+   void setHitCut(float hitCut = 5.)			{ mHitCut = hitCut;        }
+   void setCmnCorrection( bool doCmnCorrection = false )	{ mDoCmnCorrection = doCmnCorrection; }
+   void setCmnCut(float cmnCut = 3.)			{ mCmnCut = cmnCut;        }
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
-   void setDataType(int nDataType = 0)		{ mDataType = nDataType;   };
+   void setDataType(int nDataType = 0)		{ mDataType = nDataType;   }
+	void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
 
    // Get CVS
    virtual const char *GetCVS() const {
@@ -53,6 +54,7 @@ public:
 protected:
    Bool_t mIsCaliMode;
    Bool_t mDoCmnCorrection;
+	Bool_t mDoEmbedding;
    //control paramters
    Float_t mHitCut, mCmnCut, mChanMinRmsNoiseLevel, mChanMaxRmsNoiseLevel, mApvMaxCmNoiseLevel;
    UChar_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
