@@ -326,6 +326,23 @@ Int_t StIstRawHitMaker::Make()
       } //end single APV chip hits filling
    }//end while
 
+	//access raw ADC containers from simu data
+	TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
+	if ( !istSimuDataSet ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
+	}
+	if(istSimuDataSet) {
+		mIstCollectionSimuPtr = (StIstCollection*)istSimuDataSet->GetObject();
+	}
+	if( !mIstCollectionSimuPtr ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
+	}
+
+	//exit processing if no istcollection available
+	if ( !mIstCollectionPtrRaw->getNumRawHits() && !mIstCollectionSimuPtr ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - Skip while empty real istCollection and no simu istCollection found! " << endm;
+		ierr = kStWarn;
+	}
 
 	if( !ierr ){
 		dataFlag = mDataType; //initialized to 2 (0 ADC+ZS data, 1 ADC data, 2 ZS data, 3 Simu data)
