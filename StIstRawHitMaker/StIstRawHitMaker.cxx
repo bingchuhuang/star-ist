@@ -346,6 +346,23 @@ Int_t StIstRawHitMaker::Make()
 
 	if( !ierr ){
 		dataFlag = mDataType; //initialized to 2 (0 ADC+ZS data, 1 ADC data, 2 ZS data, 3 Simu data)
+
+		static Int_t ntimebin = mCurrentTimeBinNum;
+		mIstCollectionPtr->setNumTimeBins(ntimebin);
+		if ( !mIstCollectionSimuPtr ) { //real data only
+			if( !mIstCollectionPtrRaw->getNumRawHits() ) return ierr;
+			dataFlag = mIstCollectionPtrRaw->getDataType();
+			mIstCollectionPtr->setDataType(dataFlag);
+		}
+		else { //simu and/or real data
+			if(mIstCollectionPtrRaw->getNumRawHits()>0) { //real data exist
+				dataFlag = mIstCollectionPtrRaw->getDataType();
+				if( dataFlag != mADCdata || !mDoEmbedding ) return ierr; //only embedding for non-ZS data
+			}
+			mIstCollectionPtr->setDataType(dataFlag);
+		}
+
+
 		// arrays to store ADC information (110592 channels over all time bins)
 		Int_t signalUnCorrected[kIstNumElecIds][ntimebin];    //signal w/o pedestal subtracted
 		Float_t signalCorrected[kIstNumElecIds][ntimebin];    //signal w/ pedestal subtracted
