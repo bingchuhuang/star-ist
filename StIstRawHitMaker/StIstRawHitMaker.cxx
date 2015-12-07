@@ -360,8 +360,85 @@ Int_t StIstRawHitMaker::Make()
 				if( dataFlag != mADCdata || !mDoEmbedding ) return ierr; //only embedding for non-ZS data
 			}
 			mIstCollectionPtr->setDataType(dataFlag);
-		}
+			
+			//temporary container for raw ADC from real data
+			map<int, StIstRawHit *> rawHitMap;
+			for( unsigned char ladderIdx=0; ladderIdx < kIstNumLadders; ++ladderIdx ){
+				std::vector<StIstRawHit *> rawAdcRealVec = mIstCollectionPtrRaw->getRawHitCollection(ladderIdx)->getRawHitVec();
+				for (std::vector<StIstRawHit *>::iterator rawAdcRealPtr = rawAdcRealVec.begin(); rawAdcRealPtr!=rawAdcRealVec.end(); ++rawAdcRealPtr) {
+					Int_t elecId = (*rawAdcRealPtr)->getChannelId();
+					rawHitMap[elecId] = new StIstRawHit(**rawAdcRealPtr);
+				}
+			}
 
+			//loop collection channel by channel for embedding
+			for (int eId = 0; eId < kIstNumElecIds; ++eId) { 
+				Int_t elecId_real = -1;
+				Int_t elecId_simu = -1;
+
+				Int_t geoId = mMappingVec[eId];
+				Int_t ladder = 1 + (geoId - 1) / (kIstNumSensorsPerLadder * kIstNumPadsPerSensor);
+
+				Int_t idTruth = 0;
+				Float_t adc_real[ntimebin];
+				Float_t adc_simu[ntimebin];
+				for(int tb = 0; tb < ntimebin; ++tb) {
+					adc_real[tb] = 0.;
+					adc_simu[tb] = 0.;
+				}
+
+				if(rawHitMap.count(eId)) {
+					elecId_real = eId;
+					for (int t = 0; t < ntimebin; ++t) {
+						adc_real[t] = rawHitMap[elecId_real]->getCharge(t);
+					}
+				}
+
+				StIstRawHitCollection *rawHitCollectionSimuPtr = mIstCollectionSimuPtr->getRawHitCollection(ladder-1);
+				if(rawHitCollectionSimuPtr)
+				{
+					StIstRawHit * rawHitSimu = rawHitCollectionSimuPtr->getRawHit(eId);
+					elecId_simu = rawHitSimu->getChannelId();
+					idTruth = rawHitSimu->getIdTruth();
+
+					if(elecId_simu >= 0) {
+						for (int t = 0; t < ntimebin; ++t) {
+							adc_simu[t] = rawHitSimu->getCharge(t);
+						}
+					}
+				}
+				else {
+					LOG_WARN << "StIstRawHitMaker::Make() -- No rawHitCollection from simu data for ladder " << ladder << endm;
+				}
+
+				//simu and real ADC combination, and reset all channel with embedded ADCs
+				StIstRawHitCollection *rawHitCollectionRealPtr = mIstCollectionPtrRaw->getRawHitCollection(ladder-1);
+				StIstRawHit *rawAdc = rawHitCollectionRealPtr->getRawHit(eId);
+				rawAdc->setChannelId(eId);
+				rawAdc->setGeoId(geoId);
+				rawAdc->setIdTruth(idTruth);
+				rawAdc->setDefaultTimeBin(mDefaultTimeBin);
+				if(idTruth != 0) 
+					LOG_DEBUG<<"idTruth = "<<idTruth<<endm;
+				for (unsigned char t = 0; t < ntimebin; ++t) {
+					if(adc_real[t]>=0 && adc_real[t]<kIstMaxAdc)      {
+						adc_real[t] += adc_simu[t]; //combine real and simu ADCs
+
+						if(elecId_real < 0) //for channels not found from real data
+							adc_real[t] += mPedVec[eId];
+
+						if(adc_real[t] >= kIstMaxAdc) 
+							adc_real[t] = kIstMaxAdc - 1;
+					}
+					rawAdc->setCharge(adc_real[t], t);
+				}
+			}//end electronics channel ID loop
+
+			for (std::map<int, StIstRawHit *>::iterator mapIt = rawHitMap.begin(); mapIt!=rawHitMap.end(); ++mapIt) {
+				delete mapIt->second;
+			}
+			rawHitMap.clear();
+		}//end embedding
 
 		// arrays to store ADC information (110592 channels over all time bins)
 		Int_t signalUnCorrected[kIstNumElecIds][ntimebin];    //signal w/o pedestal subtracted
