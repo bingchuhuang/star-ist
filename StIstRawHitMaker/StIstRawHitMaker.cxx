@@ -197,6 +197,19 @@ Int_t StIstRawHitMaker::Make()
 {
    Int_t ierr = kStOk;
 
+	//access raw ADC containers from simu data
+	TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
+	if ( !istSimuDataSet ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
+	}
+	if(istSimuDataSet) {
+		mIstCollectionSimuPtr = (StIstCollection*)istSimuDataSet->GetObject();
+	}
+	if( !mIstCollectionSimuPtr ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
+	}
+
+
    StRtsTable *rts_tbl = 0;
    UChar_t dataFlag = mALLdata;
    Int_t ntimebin = mCurrentTimeBinNum;
