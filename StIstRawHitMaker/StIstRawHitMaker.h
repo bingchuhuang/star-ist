@@ -44,6 +44,7 @@ public:
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
    void setDataType(int nDataType = 0)		{ mDataType = nDataType;   }
 	void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
+	Int_t getDataType() {return mDataType;}
 
    // Get CVS
    virtual const char *GetCVS() const {
