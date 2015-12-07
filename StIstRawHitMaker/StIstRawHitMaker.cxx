@@ -253,21 +253,15 @@ Int_t StIstRawHitMaker::Make()
       Int_t signalUnCorrected[kIstNumApvChannels][kIstNumTimeBins];    //signal w/o pedestal subtracted
       Float_t signalCorrected[kIstNumApvChannels][kIstNumTimeBins];    //signal w/ pedestal subtracted
 
-      for (int l = 0; l < kIstNumApvChannels; l++)    {
-         for (int m = 0; m < kIstNumTimeBins; m++)    {
-            signalUnCorrected[l][m]  = 0;
-            signalCorrected[l][m]    = 0.;
-         }
-      }
+		memset(signalUnCorrected, 0, sizeof(signalUnCorrected));
+		memset(signalCorrected, 0, sizeof(signalCorrected));
 
-      // arrays to calculate dynamical common mode noise contribution to the APV chip in current event
+		// arrays to calculate dynamical common mode noise contribution to the APV chip in current event
       Float_t sumAdcPerEvent[kIstNumTimeBins];
       Int_t counterAdcPerEvent[kIstNumTimeBins];
 
-      for (int n = 0; n < kIstNumTimeBins; n++)  {
-         sumAdcPerEvent[n]     = 0.;
-         counterAdcPerEvent[n] = 0 ;
-      }
+		memset(sumAdcPerEvent, 0, sizeof(sumAdcPerEvent));
+		memset(counterAdcPerEvent, 0, sizeof(counterAdcPerEvent));
 
       // electronics coordinate info.: RDO, ARM, APV
       Int_t rdo = rts_tbl->Rdo();     // 1, 2, ..., 6
@@ -349,11 +343,8 @@ Int_t StIstRawHitMaker::Make()
 
       // raw hit decision and channel counter passed the hit decision
       Bool_t isPassRawHitCut[kIstNumApvChannels];
+		memset(isPassRawHitCut,0,sizeof(isPassRawHitCut));
       Int_t nChanPassedCut = 0;
-
-      for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
-         isPassRawHitCut[iChan] = kFALSE;
-      }
 
       for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
          Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + iChan;
