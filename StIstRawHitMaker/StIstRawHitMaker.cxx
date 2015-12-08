@@ -209,11 +209,6 @@ Int_t StIstRawHitMaker::Make()
 		LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
 	}
 
-	//exit processing if no istcollection available
-	if ( !mIstCollectionPtrRaw->getNumRawHits() && !mIstCollectionSimuPtr ) {
-		LOG_WARN << "StIstRawHitMaker::Make() - Skip while empty real istCollection and no simu istCollection found! " << endm;
-		ierr = kStWarn;
-	}
 
    StRtsTable *rts_tbl = 0;
    UChar_t dataFlag = mALLdata;
