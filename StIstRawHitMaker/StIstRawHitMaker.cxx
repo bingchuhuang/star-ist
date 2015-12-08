@@ -327,6 +327,21 @@ Int_t StIstRawHitMaker::Make()
                continue;
             }
 
+            // This is where we get the simulated hits from the simu container if it is available
+            // and merge with real data ADC values
+            if (mIstCollectionSimuPtr)
+            {
+               Int_t geoId = mMappingVec[elecId];
+               Int_t ladder = 1 + (geoId - 1) / (kIstNumSensorsPerLadder * kIstNumPadsPerSensor);
+
+               StIstRawHitCollection *rawHitCollectionSimuPtr = mIstCollectionSimuPtr->getRawHitCollection(ladder-1);
+               if(rawHitCollectionSimuPtr)
+               {
+                  StIstRawHit * rawHitSimu = rawHitCollectionSimuPtr->getRawHit(elecId);
+                  signalUnCorrected[channel][timebin] += rawHitSimu->getCharge(timebin);
+               }
+            }
+
             if ( dataFlag == mADCdata ) { // non-ZS data
                signalCorrected[channel][timebin]    = (float)signalUnCorrected[channel][timebin] - mPedVec[elecId];
 
