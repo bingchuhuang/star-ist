@@ -377,7 +377,7 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
       // skip the chip filling if the signal-channel number too large (20% chip occupancy was set) to exclude hot chip
       if ( !mIsCaliMode && (nChanPassedCut > mMaxNumOfRawHits || nChanPassedCut < mMinNumOfRawHits) ) {
          LOG_DEBUG << "Skip: The APV chip could be hot with " << nChanPassedCut << " channels fired!!" << endm;
-         continue;
+         return;
       }
 
       // fill IST raw hits for current APV chip
@@ -403,19 +403,19 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
                   rawHitPtr->setChannelId( elecId );
                   rawHitPtr->setGeoId( geoId );
                }
-               else continue;
+               else return;
             }
             else { //physics mode: pedestal subtracted + dynamical common mode correction
                //skip dead chips and bad mis-configured chips
                if (mConfigVec[apvId - 1] < 1 || mConfigVec[apvId - 1] > 9) { //1-9 good status code
                   LOG_DEBUG << "Skip: Channel belongs to dead/bad/mis-configured APV chip geometry index: " << apvId << " on ladder " << ladder << endm;
-                  continue;
+                  return;
                }
 
                //skip current channel marked as suspicious status
                if (mRmsVec[elecId] < mChanMinRmsNoiseLevel || mRmsVec[elecId] > mChanMaxRmsNoiseLevel || mRmsVec[elecId] > 99.0)  {
                   LOG_DEBUG << "Skip: Noisy/hot/dead channel electronics index: " << elecId << endm;
-                  continue;
+                  return;
                }
 
                if ( isPassRawHitCut[iChan] ) {
