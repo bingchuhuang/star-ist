@@ -279,6 +279,9 @@ Int_t StIstRawHitMaker::Make()
          continue;
       }
 
+      // Define apv Id to form full channel id later
+      int apvElecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels;
+
       // Loop over the data in this APV to get raw hit info. (channel, timebin, adc)
       for (StRtsTable::iterator it = rts_tbl->begin(); it != rts_tbl->end(); it++) {
          // channel info.
@@ -304,7 +307,7 @@ Int_t StIstRawHitMaker::Make()
          signalUnCorrected[channel][timebin] = adc;
 
          if ( !mIsCaliMode )        {
-            Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + channel; // 0, ..., 110591
+            Int_t elecId = apvElecId + channel;
 
             if (elecId < 0 || elecId >= kIstNumElecIds) {
                LOG_INFO << "Wrong elecId: " << elecId  << endm;
@@ -358,7 +361,7 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
 
 
    for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
-      Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + iChan;
+      Int_t elecId = apvElecId + iChan;
 
       for (int iTB = 1; iTB < ntimebin - 1; iTB++)    {
          // raw hit decision: the method is stolen from Gerrit's ARMdisplay.C
@@ -383,7 +386,7 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
    // fill IST raw hits for current APV chip
    for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
       //mapping info.
-      Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + iChan;
+      Int_t elecId = apvElecId + iChan;
       Int_t geoId  = mMappingVec[elecId]; // channel geometry ID which is numbering from 1 to 110592
       Int_t ladder = 1 + (geoId - 1) / (kIstApvsPerLadder * kIstNumApvChannels); // ladder geometry ID: 1, 2, ..., 24
       Int_t apvId  = 1 + (geoId - 1) / kIstNumApvChannels; // APV geometry ID: 1, ..., 864 (numbering from ladder 1 to ladder 24)
