@@ -57,7 +57,7 @@ protected:
    Bool_t mIsCaliMode;
    Bool_t mDoEmbedding;
    Bool_t mDoCmnCorrection;
-	Bool_t mDoEmbedding;
+   
    //control paramters
    Float_t mHitCut, mCmnCut, mChanMinRmsNoiseLevel, mChanMaxRmsNoiseLevel, mApvMaxCmNoiseLevel;
    UChar_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
@@ -78,6 +78,7 @@ private:
    void FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
       int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
       float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins]);
+   void FillRawHitCollectionFromSimData();
 
    Int_t mDataType; ///<  0=all, 1=adc only, 2=zs only
 
