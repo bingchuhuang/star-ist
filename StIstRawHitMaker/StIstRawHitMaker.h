@@ -18,6 +18,7 @@
 
 #include "StRoot/St_base/Stypes.h"
 #include "StRoot/StChain/StRTSBaseMaker.h"
+#include "StRoot/StIstUtil/StIstConsts.h"
 
 #include <vector>
 #include <string>
@@ -42,9 +43,9 @@ public:
    void setCmnCorrection( bool doCmnCorrection = false )	{ mDoCmnCorrection = doCmnCorrection; }
    void setCmnCut(float cmnCut = 3.)			{ mCmnCut = cmnCut;        }
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
-   void setDataType(int nDataType = 0)		{ mDataType = nDataType;   }
-	void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
-	Int_t getDataType() {return mDataType;}
+   void setDataType(int nDataType = 0)		{ mDataType = nDataType;   };
+   void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
+   UChar_t getDataType() {return mDataType;} // 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
 
    // Get CVS
    virtual const char *GetCVS() const {
@@ -54,6 +55,7 @@ public:
 
 protected:
    Bool_t mIsCaliMode;
+   Bool_t mDoEmbedding;
    Bool_t mDoCmnCorrection;
 	Bool_t mDoEmbedding;
    //control paramters
@@ -61,8 +63,8 @@ protected:
    UChar_t mALLdata, mADCdata, mZSdata, mDefaultTimeBin, mCurrentTimeBinNum;
    UShort_t mMinNumOfRawHits, mMaxNumOfRawHits;
 
-   StIstCollection *mIstCollectionPtr;
-	StIstCollection *mIstCollectionSimuPtr;
+   StIstCollection *mIstCollectionPtr; //raw ADC container from real data
+   StIstCollection *mIstCollectionSimuPtr; //raw ADC container from simu data
 
    std::vector< float > mCmnVec; ///< APV chip geom. index, common mode (CM) noise
    std::vector< float > mPedVec; ///< Channel elec. index, pedestal
@@ -72,6 +74,11 @@ protected:
    std::vector< unsigned char > mConfigVec; ///< APV chip configuration status indexed by geom. id
 
 private:
+
+   void FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
+      int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
+      float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins]);
+
    Int_t mDataType; ///<  0=all, 1=adc only, 2=zs only
 
    ClassDef(StIstRawHitMaker, 0);

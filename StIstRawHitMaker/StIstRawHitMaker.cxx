@@ -197,6 +197,19 @@ Int_t StIstRawHitMaker::Make()
 {
    Int_t ierr = kStOk;
 
+	//access raw ADC containers from simu data
+	TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
+	if ( !istSimuDataSet ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
+	}
+	if(istSimuDataSet) {
+		mIstCollectionSimuPtr = (StIstCollection*)istSimuDataSet->GetObject();
+	}
+	if( !mIstCollectionSimuPtr ) {
+		LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
+	}
+
+
    StRtsTable *rts_tbl = 0;
    UChar_t dataFlag = mALLdata;
    Int_t ntimebin = mCurrentTimeBinNum;
@@ -252,22 +265,14 @@ Int_t StIstRawHitMaker::Make()
       // arrays to store ADC information per APV chip (128 channels over all time bins)
       Int_t signalUnCorrected[kIstNumApvChannels][kIstNumTimeBins];    //signal w/o pedestal subtracted
       Float_t signalCorrected[kIstNumApvChannels][kIstNumTimeBins];    //signal w/ pedestal subtracted
-
-      for (int l = 0; l < kIstNumApvChannels; l++)    {
-         for (int m = 0; m < kIstNumTimeBins; m++)    {
-            signalUnCorrected[l][m]  = 0;
-            signalCorrected[l][m]    = 0.;
-         }
-      }
+      memset(signalUnCorrected, 0, sizeof(signalUnCorrected));
+      memset(signalCorrected, 0, sizeof(signalCorrected));
 
       // arrays to calculate dynamical common mode noise contribution to the APV chip in current event
       Float_t sumAdcPerEvent[kIstNumTimeBins];
       Int_t counterAdcPerEvent[kIstNumTimeBins];
-
-      for (int n = 0; n < kIstNumTimeBins; n++)  {
-         sumAdcPerEvent[n]     = 0.;
-         counterAdcPerEvent[n] = 0 ;
-      }
+      memset(sumAdcPerEvent, 0, sizeof(sumAdcPerEvent));
+      memset(counterAdcPerEvent, 0, sizeof(counterAdcPerEvent));
 
       // electronics coordinate info.: RDO, ARM, APV
       Int_t rdo = rts_tbl->Rdo();     // 1, 2, ..., 6
@@ -286,6 +291,9 @@ Int_t StIstRawHitMaker::Make()
          LOG_INFO << "Corrupt data  rdo: " << rdo << " arm: " << arm << " apv: " << apv << endm;
          continue;
       }
+
+      // Define apv Id to form full channel id later
+      int apvElecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels;
 
       // Loop over the data in this APV to get raw hit info. (channel, timebin, adc)
       for (StRtsTable::iterator it = rts_tbl->begin(); it != rts_tbl->end(); it++) {
@@ -312,11 +320,26 @@ Int_t StIstRawHitMaker::Make()
          signalUnCorrected[channel][timebin] = adc;
 
          if ( !mIsCaliMode )        {
-            Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + channel; // 0, ..., 110591
+            Int_t elecId = apvElecId + channel;
 
             if (elecId < 0 || elecId >= kIstNumElecIds) {
                LOG_INFO << "Wrong elecId: " << elecId  << endm;
                continue;
+            }
+
+            // This is where we get the simulated hits from the simu container if it is available
+            // and merge with real data ADC values
+            if (mIstCollectionSimuPtr)
+            {
+               Int_t geoId = mMappingVec[elecId];
+               Int_t ladder = 1 + (geoId - 1) / (kIstNumSensorsPerLadder * kIstNumPadsPerSensor);
+
+               StIstRawHitCollection *rawHitCollectionSimuPtr = mIstCollectionSimuPtr->getRawHitCollection(ladder-1);
+               if(rawHitCollectionSimuPtr)
+               {
+                  StIstRawHit * rawHitSimu = rawHitCollectionSimuPtr->getRawHit(elecId);
+                  signalUnCorrected[channel][timebin] += rawHitSimu->getCharge(timebin);
+               }
             }
 
             if ( dataFlag == mADCdata ) { // non-ZS data
@@ -334,123 +357,130 @@ Int_t StIstRawHitMaker::Make()
          }
       } // end current APV loops
 
-      // calculate the dynamical common mode noise for the current chip in this event
-      Float_t commonModeNoise[kIstNumTimeBins];
+      FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerEvent, sumAdcPerEvent, apvElecId, signalUnCorrected, signalCorrected);
 
-      for (int tbIdx = 0; tbIdx < kIstNumTimeBins; tbIdx++)
-         commonModeNoise[tbIdx] = 0.;
-
-      if ( !mIsCaliMode && dataFlag == mADCdata ) {
-         for (short iTb = 0; iTb < ntimebin; iTb++)  {
-            if (counterAdcPerEvent[iTb] > 0)
-               commonModeNoise[iTb] = sumAdcPerEvent[iTb] / counterAdcPerEvent[iTb];
-         }
-      }
-
-      // raw hit decision and channel counter passed the hit decision
-      Bool_t isPassRawHitCut[kIstNumApvChannels];
-      Int_t nChanPassedCut = 0;
-
-      for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
-         isPassRawHitCut[iChan] = kFALSE;
-      }
-
-      for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
-         Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + iChan;
-
-         for (int iTB = 1; iTB < ntimebin - 1; iTB++)    {
-            // raw hit decision: the method is stolen from Gerrit's ARMdisplay.C
-            if ( (signalUnCorrected[iChan][iTB] > 0) && (signalUnCorrected[iChan][iTB] < kIstMaxAdc) &&
-                  (signalCorrected[iChan][iTB - 1] > mHitCut * mRmsVec[elecId])     &&
-                  (signalCorrected[iChan][iTB]   > mHitCut * mRmsVec[elecId])     &&
-                  (signalCorrected[iChan][iTB + 1] > mHitCut * mRmsVec[elecId]) ) {
-
-               isPassRawHitCut[iChan] = kTRUE;
-               nChanPassedCut++;
-               iTB = 999;
-            }
-         }
-      }
-
-      // skip the chip filling if the signal-channel number too large (20% chip occupancy was set) to exclude hot chip
-      if ( !mIsCaliMode && (nChanPassedCut > mMaxNumOfRawHits || nChanPassedCut < mMinNumOfRawHits) ) {
-         LOG_DEBUG << "Skip: The APV chip could be hot with " << nChanPassedCut << " channels fired!!" << endm;
-         continue;
-      }
-
-      // fill IST raw hits for current APV chip
-      for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
-         //mapping info.
-         Int_t elecId = (rdo - 1) * kIstNumArmsPerRdo * kIstNumApvsPerArm * kIstNumApvChannels + arm * kIstNumApvsPerArm * kIstNumApvChannels + apv * kIstNumApvChannels + iChan;
-         Int_t geoId  = mMappingVec[elecId]; // channel geometry ID which is numbering from 1 to 110592
-         Int_t ladder = 1 + (geoId - 1) / (kIstApvsPerLadder * kIstNumApvChannels); // ladder geometry ID: 1, 2, ..., 24
-         Int_t apvId  = 1 + (geoId - 1) / kIstNumApvChannels; // APV geometry ID: 1, ..., 864 (numbering from ladder 1 to ladder 24)
-
-         //store raw hits information
-         StIstRawHitCollection *rawHitCollectionPtr = mIstCollectionPtr->getRawHitCollection( ladder - 1 );
-
-         if ( rawHitCollectionPtr ) {
-            if ( mIsCaliMode ) { //calibration mode (non-ZS data): only write raw ADC value
-               if (dataFlag == mADCdata) {
-                  StIstRawHit *rawHitPtr = rawHitCollectionPtr->getRawHit( elecId );
-
-                  for (int iTimeBin = 0; iTimeBin < ntimebin; iTimeBin++) {
-                     rawHitPtr->setCharge( (float)signalUnCorrected[iChan][iTimeBin], (unsigned char)iTimeBin );
-                  }
-
-                  rawHitPtr->setChannelId( elecId );
-                  rawHitPtr->setGeoId( geoId );
-               }
-               else continue;
-            }
-            else { //physics mode: pedestal subtracted + dynamical common mode correction
-               //skip dead chips and bad mis-configured chips
-               if (mConfigVec[apvId - 1] < 1 || mConfigVec[apvId - 1] > 9) { //1-9 good status code
-                  LOG_DEBUG << "Skip: Channel belongs to dead/bad/mis-configured APV chip geometry index: " << apvId << " on ladder " << ladder << endm;
-                  continue;
-               }
-
-               //skip current channel marked as suspicious status
-               if (mRmsVec[elecId] < mChanMinRmsNoiseLevel || mRmsVec[elecId] > mChanMaxRmsNoiseLevel || mRmsVec[elecId] > 99.0)  {
-                  LOG_DEBUG << "Skip: Noisy/hot/dead channel electronics index: " << elecId << endm;
-                  continue;
-               }
-
-               if ( isPassRawHitCut[iChan] ) {
-                  UChar_t tempMaxTB = -1;
-                  Float_t tempMaxCharge = -999.0;
-
-                  StIstRawHit *rawHitPtr = rawHitCollectionPtr->getRawHit( elecId );
-
-                  for (int iTBin = 0; iTBin < ntimebin; iTBin++)      {
-                     if ( mDoCmnCorrection && dataFlag == mADCdata )
-                        signalCorrected[iChan][iTBin] -= commonModeNoise[iTBin];
-
-                     if (signalCorrected[iChan][iTBin] < 0) signalCorrected[iChan][iTBin] = 0.1;
-
-                     rawHitPtr->setCharge(signalCorrected[iChan][iTBin] * mGainVec[elecId], (unsigned char)iTBin );
-                     rawHitPtr->setChargeErr(mRmsVec[elecId] * mGainVec[elecId], (unsigned char)iTBin);
-
-                     if (signalCorrected[iChan][iTBin] > tempMaxCharge) {
-                        tempMaxCharge = signalCorrected[iChan][iTBin];
-                        tempMaxTB = (unsigned char)iTBin;
-                     }
-                  }
-
-                  rawHitPtr->setChannelId( elecId );
-                  rawHitPtr->setGeoId( geoId );
-                  rawHitPtr->setMaxTimeBin( tempMaxTB );
-                  rawHitPtr->setDefaultTimeBin( mDefaultTimeBin );
-               }//end raw hit decision cut
-            }//end filling hit info
-         }
-         else {
-            LOG_WARN << "StIstRawHitMaker::Make() -- Could not access rawHitCollection for ladder " << ladder << endm;
-         }
-      } //end single APV chip hits filling
    }//end while
 
    return ierr;
+}
+
+
+void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
+   int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
+   float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins])
+{
+   // calculate the dynamical common mode noise for the current chip in this event
+   Float_t commonModeNoise[kIstNumTimeBins];
+
+   for (int tbIdx = 0; tbIdx < kIstNumTimeBins; tbIdx++)
+      commonModeNoise[tbIdx] = 0.;
+
+   if ( !mIsCaliMode && dataFlag == mADCdata ) {
+      for (short iTb = 0; iTb < ntimebin; iTb++)  {
+         if (counterAdcPerEvent[iTb] > 0)
+            commonModeNoise[iTb] = sumAdcPerEvent[iTb] / counterAdcPerEvent[iTb];
+      }
+   }
+
+   // raw hit decision and channel counter passed the hit decision
+   Bool_t isPassRawHitCut[kIstNumApvChannels];
+   memset(isPassRawHitCut,0,sizeof(isPassRawHitCut));
+   Int_t nChanPassedCut = 0;
+
+
+   for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
+      Int_t elecId = apvElecId + iChan;
+
+      for (int iTB = 1; iTB < ntimebin - 1; iTB++)    {
+         // raw hit decision: the method is stolen from Gerrit's ARMdisplay.C
+         if ( (signalUnCorrected[iChan][iTB] > 0) && (signalUnCorrected[iChan][iTB] < kIstMaxAdc) &&
+               (signalCorrected[iChan][iTB - 1] > mHitCut * mRmsVec[elecId])     &&
+               (signalCorrected[iChan][iTB]   > mHitCut * mRmsVec[elecId])     &&
+               (signalCorrected[iChan][iTB + 1] > mHitCut * mRmsVec[elecId]) ) {
+
+            isPassRawHitCut[iChan] = kTRUE;
+            nChanPassedCut++;
+            iTB = 999;
+         }
+      }
+   }
+
+   // skip the chip filling if the signal-channel number too large (20% chip occupancy was set) to exclude hot chip
+   if ( !mIsCaliMode && (nChanPassedCut > mMaxNumOfRawHits || nChanPassedCut < mMinNumOfRawHits) ) {
+      LOG_DEBUG << "Skip: The APV chip could be hot with " << nChanPassedCut << " channels fired!!" << endm;
+      return;
+   }
+
+   // fill IST raw hits for current APV chip
+   for (int iChan = 0; iChan < kIstNumApvChannels; iChan++) {
+      //mapping info.
+      Int_t elecId = apvElecId + iChan;
+      Int_t geoId  = mMappingVec[elecId]; // channel geometry ID which is numbering from 1 to 110592
+      Int_t ladder = 1 + (geoId - 1) / (kIstApvsPerLadder * kIstNumApvChannels); // ladder geometry ID: 1, 2, ..., 24
+      Int_t apvId  = 1 + (geoId - 1) / kIstNumApvChannels; // APV geometry ID: 1, ..., 864 (numbering from ladder 1 to ladder 24)
+
+      //store raw hits information
+      StIstRawHitCollection *rawHitCollectionPtr = mIstCollectionPtr->getRawHitCollection( ladder - 1 );
+
+      if ( rawHitCollectionPtr ) {
+         if ( mIsCaliMode ) { //calibration mode (non-ZS data): only write raw ADC value
+            if (dataFlag == mADCdata) {
+               StIstRawHit *rawHitPtr = rawHitCollectionPtr->getRawHit( elecId );
+
+               for (int iTimeBin = 0; iTimeBin < ntimebin; iTimeBin++) {
+                  rawHitPtr->setCharge( (float)signalUnCorrected[iChan][iTimeBin], (unsigned char)iTimeBin );
+               }
+
+               rawHitPtr->setChannelId( elecId );
+               rawHitPtr->setGeoId( geoId );
+            }
+            else return;
+         }
+         else { //physics mode: pedestal subtracted + dynamical common mode correction
+            //skip dead chips and bad mis-configured chips
+            if (mConfigVec[apvId - 1] < 1 || mConfigVec[apvId - 1] > 9) { //1-9 good status code
+               LOG_DEBUG << "Skip: Channel belongs to dead/bad/mis-configured APV chip geometry index: " << apvId << " on ladder " << ladder << endm;
+               return;
+            }
+
+            //skip current channel marked as suspicious status
+            if (mRmsVec[elecId] < mChanMinRmsNoiseLevel || mRmsVec[elecId] > mChanMaxRmsNoiseLevel || mRmsVec[elecId] > 99.0)  {
+               LOG_DEBUG << "Skip: Noisy/hot/dead channel electronics index: " << elecId << endm;
+               return;
+            }
+
+            if ( isPassRawHitCut[iChan] ) {
+               UChar_t tempMaxTB = -1;
+               Float_t tempMaxCharge = -999.0;
+
+               StIstRawHit *rawHitPtr = rawHitCollectionPtr->getRawHit( elecId );
+
+               for (int iTBin = 0; iTBin < ntimebin; iTBin++)      {
+                  if ( mDoCmnCorrection && dataFlag == mADCdata )
+                     signalCorrected[iChan][iTBin] -= commonModeNoise[iTBin];
+
+                  if (signalCorrected[iChan][iTBin] < 0) signalCorrected[iChan][iTBin] = 0.1;
+
+                  rawHitPtr->setCharge(signalCorrected[iChan][iTBin] * mGainVec[elecId], (unsigned char)iTBin );
+                  rawHitPtr->setChargeErr(mRmsVec[elecId] * mGainVec[elecId], (unsigned char)iTBin);
+
+                  if (signalCorrected[iChan][iTBin] > tempMaxCharge) {
+                     tempMaxCharge = signalCorrected[iChan][iTBin];
+                     tempMaxTB = (unsigned char)iTBin;
+                  }
+               }
+
+               rawHitPtr->setChannelId( elecId );
+               rawHitPtr->setGeoId( geoId );
+               rawHitPtr->setMaxTimeBin( tempMaxTB );
+               rawHitPtr->setDefaultTimeBin( mDefaultTimeBin );
+            }//end raw hit decision cut
+         }//end filling hit info
+      }
+      else {
+         LOG_WARN << "StIstRawHitMaker::Make() -- Could not access rawHitCollection for ladder " << ladder << endm;
+      }
+   } //end single APV chip hits filling
 }
 
 void StIstRawHitMaker::Clear( Option_t *opts )
