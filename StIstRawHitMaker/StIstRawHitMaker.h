@@ -77,6 +77,7 @@ private:
    void FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
       int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
       float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins]);
+   void FillRawHitCollectionFromSimData();
 
    Int_t mDataType; ///<  0=all, 1=adc only, 2=zs only
 

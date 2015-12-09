@@ -214,6 +214,7 @@ Int_t StIstRawHitMaker::Make()
    UChar_t dataFlag = mALLdata;
    Int_t ntimebin = mCurrentTimeBinNum;
 
+   Int_t nRawAdcFromData = 0;
    while (1) { //loops over input raw data
       if (dataFlag == mALLdata) {
          if (mDataType == mALLdata) {
@@ -318,6 +319,7 @@ Int_t StIstRawHitMaker::Make()
          }
 
          signalUnCorrected[channel][timebin] = adc;
+         if(adc>0) nRawAdcFromData++;
 
          if ( !mIsCaliMode )        {
             Int_t elecId = apvElecId + channel;
@@ -360,6 +362,8 @@ Int_t StIstRawHitMaker::Make()
       FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerEvent, sumAdcPerEvent, apvElecId, signalUnCorrected, signalCorrected);
 
    }//end while
+
+   if(!mDoEmbedding && !nRawAdcFromData) FillRawHitCollectionFromSimData();
 
    return ierr;
 }
@@ -482,6 +486,28 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
       }
    } //end single APV chip hits filling
 };
+
+void StIstRawHitMaker::FillRawHitCollectionFromSimData()
+{
+   if(!mIstCollectionSimuPtr) return;
+   for( UChar_t ladderIdx=0; ladderIdx < kIstNumLadders; ++ladderIdx ){
+      StIstRawHitCollection *rawHitCollectionDataPtr = mIstCollectionPtr->getRawHitCollection( ladderIdx );
+      std::vector<StIstRawHit *> rawAdcSimuVec = mIstCollectionSimuPtr->getRawHitCollection(ladderIdx)->getRawHitVec();
+      for (std::vector<StIstRawHit *>::iterator rawAdcSimuPtr = rawAdcSimuVec.begin(); rawAdcSimuPtr!=rawAdcSimuVec.end(); ++rawAdcSimuPtr) {
+         Int_t eId = (*rawAdcSimuPtr)->getChannelId();
+		   StIstRawHit * rawHitData = rawHitCollectionDataPtr->getRawHit(eId);
+         for(Int_t iTBin=0; iTBin<mCurrentTimeBinNum; iTBin++){
+            rawHitData->setCharge((*rawAdcSimuPtr)->getCharge(iTBin),(UChar_t)iTBin);
+            rawHitData->setChargeErr((*rawAdcSimuPtr)->getChargeErr(iTBin),(UChar_t)iTBin);
+         }
+         rawHitData->setChannelId(eId);
+         rawHitData->setGeoId((*rawAdcSimuPtr)->getGeoId());
+         rawHitData->setMaxTimeBin((*rawAdcSimuPtr)->getMaxTimeBin());
+         rawHitData->setDefaultTimeBin((*rawAdcSimuPtr)->getDefaultTimeBin());
+         rawHitData->setIdTruth((*rawAdcSimuPtr)->getIdTruth());
+      }
+   }
+}
 
 void StIstRawHitMaker::Clear( Option_t *opts )
 {
