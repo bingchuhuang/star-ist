@@ -18,6 +18,7 @@
 
 #include "St_base/Stypes.h"
 #include "StChain/StRTSBaseMaker.h"
+#include "StIstUtil/StIstConsts.h"
 
 #include <vector>
 #include <string>
@@ -72,6 +73,11 @@ protected:
    std::vector< unsigned char > mConfigVec; ///< APV chip configuration status indexed by geom. id
 
 private:
+
+   void FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
+      int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
+      float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins]);
+
    Int_t mDataType; ///<  0=all, 1=adc only, 2=zs only
 
    ClassDef(StIstRawHitMaker, 0);

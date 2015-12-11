@@ -326,6 +326,18 @@ Int_t StIstRawHitMaker::Make()
          }
       } // end current APV loops
 
+      FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerEvent, sumAdcPerEvent, apvElecId, signalUnCorrected, signalCorrected);
+
+   }//end while
+
+   return ierr;
+}
+
+
+void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, int ntimebin, int counterAdcPerEvent[], float sumAdcPerEvent[], int apvElecId,
+   int (&signalUnCorrected)[kIstNumApvChannels][kIstNumTimeBins],
+   float (&signalCorrected)[kIstNumApvChannels][kIstNumTimeBins])
+{
       // calculate the dynamical common mode noise for the current chip in this event
       Float_t commonModeNoise[kIstNumTimeBins];
 
@@ -438,9 +450,6 @@ Int_t StIstRawHitMaker::Make()
             LOG_WARN << "StIstRawHitMaker::Make() -- Could not access rawHitCollection for ladder " << ladder << endm;
          }
       } //end single APV chip hits filling
-   }//end while
-
-   return ierr;
 };
 
 void StIstRawHitMaker::Clear( Option_t *opts )
