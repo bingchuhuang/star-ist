@@ -8,19 +8,19 @@
 * See header file.
 ***************************************************************************/
 
-#include "StIstRawHitMaker.h"
+#include "StIstRawHitMaker/StIstRawHitMaker.h"
 
-#include "StEvent.h"
-#include "StRoot/St_base/StMessMgr.h"
+#include "StEvent/StEvent.h"
+#include "St_base/StMessMgr.h"
 #include "RTS/src/DAQ_FGT/daq_fgt.h"
 #include "RTS/src/DAQ_READER/daq_dta.h"
 #include "StChain/StRtsTable.h"
 
-#include "StRoot/StIstUtil/StIstCollection.h"
-#include "StRoot/StIstUtil/StIstRawHitCollection.h"
-#include "StRoot/StIstUtil/StIstRawHit.h"
-#include "StRoot/StIstDbMaker/StIstDb.h"
-#include "StRoot/StIstUtil/StIstConsts.h"
+#include "StIstUtil/StIstCollection.h"
+#include "StIstUtil/StIstRawHitCollection.h"
+#include "StIstUtil/StIstRawHit.h"
+#include "StIstDbMaker/StIstDb.h"
+#include "StIstUtil/StIstConsts.h"
 
 #include "tables/St_istPedNoise_Table.h"
 #include "tables/St_istGain_Table.h"
@@ -197,17 +197,17 @@ Int_t StIstRawHitMaker::Make()
 {
    Int_t ierr = kStOk;
 
-	//access raw ADC containers from simu data
-	TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
-	if ( !istSimuDataSet ) {
-		LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
-	}
-	if(istSimuDataSet) {
-		mIstCollectionSimuPtr = (StIstCollection*)istSimuDataSet->GetObject();
-	}
-	if( !mIstCollectionSimuPtr ) {
-		LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
-	}
+   //access raw ADC containers from simu data
+   TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
+   if ( !istSimuDataSet ) {
+      LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
+   }
+   if(istSimuDataSet) {
+      mIstCollectionSimuPtr = (StIstCollection*)istSimuDataSet->GetObject();
+   }
+   if( !mIstCollectionSimuPtr ) {
+      LOG_WARN << "StIstRawHitMaker::Make() - No istCollection found in simu dataset! "<<endm;
+   }
 
 
    StRtsTable *rts_tbl = 0;

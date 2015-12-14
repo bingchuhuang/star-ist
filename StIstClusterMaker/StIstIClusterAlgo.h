@@ -3,8 +3,8 @@
 
 #include <climits>
 
-#include "Stypes.h"
-#include "StRoot/StIstUtil/StIstCollection.h"
+#include "St_base/Stypes.h"
+#include "StIstUtil/StIstCollection.h"
 
 class StIstRawHitCollection;
 class StIstClusterCollection;

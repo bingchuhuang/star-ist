@@ -5,7 +5,7 @@
 
 #include "TRandom1.h"
 
-#include "StMaker.h"
+#include "StChain/StMaker.h"
 
 class StIstDb;
 class THashList;

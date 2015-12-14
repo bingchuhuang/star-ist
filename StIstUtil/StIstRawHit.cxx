@@ -52,8 +52,8 @@
 * Initial version
 ****************************************************************************/
 
-#include "StIstRawHit.h"
-#include "StRoot/St_base/StMessMgr.h"
+#include "StIstUtil/StIstRawHit.h"
+#include "St_base/StMessMgr.h"
 
 using namespace StIstConsts;
 

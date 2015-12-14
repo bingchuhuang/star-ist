@@ -1,24 +1,24 @@
 /* $Id: StIstHitMaker.cxx,v 1.28 2015/01/14 02:29:10 ypwang Exp $ */
 
-#include "Stypes.h"
+#include "St_base/Stypes.h"
 #include "TNamed.h"
 #include "TGeoMatrix.h"
 
-#include "StIstHitMaker.h"
-#include "StRoot/StIstUtil/StIstCollection.h"
-#include "StRoot/StIstUtil/StIstCluster.h"
-#include "StRoot/StIstUtil/StIstClusterCollection.h"
-#include "StIstHit.h"
-#include "StIstHitCollection.h"
+#include "StIstHitMaker/StIstHitMaker.h"
+#include "StIstUtil/StIstCollection.h"
+#include "StIstUtil/StIstCluster.h"
+#include "StIstUtil/StIstClusterCollection.h"
+#include "StEvent/StIstHit.h"
+#include "StEvent/StIstHitCollection.h"
 
-#include "StRoot/St_base/StMessMgr.h"
-#include "StEvent.h"
-#include "StEventTypes.h"
-#include "StContainers.h"
+#include "St_base/StMessMgr.h"
+#include "StEvent/StEvent.h"
+#include "StEvent/StEventTypes.h"
+#include "StEvent/StContainers.h"
 #include "StEvent/StEnumerations.h"
-#include "StRoot/StIstUtil/StIstConsts.h"
+#include "StIstUtil/StIstConsts.h"
 
-#include "StRoot/StIstDbMaker/StIstDb.h"
+#include "StIstDbMaker/StIstDb.h"
 #include "tables/St_istControl_Table.h"
 
 ClassImp(StIstHitMaker);

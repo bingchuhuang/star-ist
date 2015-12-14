@@ -1,11 +1,11 @@
 #ifndef StIstCollection_hh
 #define StIstCollection_hh
 
-#include "StObject.h"
+#include "St_base/StObject.h"
 #include "StEvent/StEnumerations.h"
-#include "StIstRawHitCollection.h"
-#include "StIstClusterCollection.h"
-#include "StIstConsts.h"
+#include "StIstUtil/StIstRawHitCollection.h"
+#include "StIstUtil/StIstClusterCollection.h"
+#include "StIstUtil/StIstConsts.h"
 
 using namespace StIstConsts;
 

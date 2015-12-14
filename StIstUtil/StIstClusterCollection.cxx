@@ -1,6 +1,6 @@
-#include "StIstCluster.h"
-#include "StIstClusterCollection.h"
-#include "StRoot/St_base/StMessMgr.h"
+#include "StIstUtil/StIstCluster.h"
+#include "StIstUtil/StIstClusterCollection.h"
+#include "St_base/StMessMgr.h"
 
 
 StIstClusterCollection::StIstClusterCollection( int ladder ) : StObject(), mLadder( ladder )

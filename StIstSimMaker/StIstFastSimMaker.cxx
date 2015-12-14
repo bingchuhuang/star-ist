@@ -15,7 +15,7 @@
 #include "StIstDbMaker/StIstDb.h"
 #include "StMcEvent/StMcIstHit.hh"
 #include "StMcEvent/StMcIstHitCollection.hh"
-#include "StThreeVectorF.hh"
+#include "StarClassLibrary/StThreeVectorF.hh"
 #include "tables/St_HitError_Table.h"
 
 ClassImp(StIstFastSimMaker)

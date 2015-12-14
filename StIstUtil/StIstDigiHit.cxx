@@ -26,7 +26,7 @@
 * Initial version
 ****************************************************************************/
 
-#include "StIstDigiHit.h"
+#include "StIstUtil/StIstDigiHit.h"
 
 
 StMemoryPool StIstDigiHit::mPool(sizeof(StIstDigiHit));
