@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id: StIstRawHitMaker.h,v 1.15 2015/07/27 18:51:01 huangbc Exp $
+* $Id: StIstRawHitMaker.h,v 1.4 2015/12/15 17:26:46 huangbc Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -32,7 +32,6 @@ class StIstRawHitMaker : public StRTSBaseMaker
 {
 public:
    StIstRawHitMaker( const char *name = "ist_raw_hit" );
-   ~StIstRawHitMaker();
    Int_t Init();
    Int_t InitRun(Int_t runNumber);
    Int_t Make();
@@ -49,7 +48,7 @@ public:
 
    // Get CVS
    virtual const char *GetCVS() const {
-      static const char cvs[] = "Tag $Name:  $ $Id: StIstRawHitMaker.h,v 1.15 2015/07/27 18:51:01 huangbc Exp $ built " __DATE__ " " __TIME__  ;
+      static const char cvs[] = "Tag $Name:  $ $Id: StIstRawHitMaker.h,v 1.4 2015/12/15 17:26:46 huangbc Exp $ built " __DATE__ " " __TIME__  ;
       return cvs;
    }
 
@@ -91,6 +90,11 @@ private:
 /***************************************************************************
 *
 * $Log: StIstRawHitMaker.h,v $
+* Revision 1.4  2015/12/15 17:26:46  huangbc
+* Swith the initialization of raw hit collection to STAR standard way. Clean up the dtor.
+* Setters use SAttr to read the values.
+* Add idTruth for simulated hits, which is missing in last version.
+*
 * Revision 1.15  2015/07/27 18:51:01  huangbc
 * Add space before and after "__DATE__" and "__TIME__" for compling under gcc4.8.2
 *

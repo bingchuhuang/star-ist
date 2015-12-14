@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id: StIstRawHitMaker.cxx,v 1.33 2015/08/06 17:48:10 smirnovd Exp $
+* $Id: StIstRawHitMaker.cxx,v 1.5 2015/12/15 17:26:46 huangbc Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -40,13 +40,11 @@ StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", n
    mGainVec.resize( kIstNumElecIds );
    mMappingVec.resize( kIstNumElecIds );
    mConfigVec.resize( kIstNumApvs, 1 );
-}
 
-StIstRawHitMaker::~StIstRawHitMaker()
-{
-   delete mIstCollectionPtr; mIstCollectionPtr = 0;
-}
+   setHitCut();
+   setCmnCut();
 
+}
 
 /*!
  * Init(): prepare the IST raw hit collection
@@ -55,20 +53,15 @@ StIstRawHitMaker::~StIstRawHitMaker()
 Int_t StIstRawHitMaker::Init()
 {
    LOG_INFO << "Initializing StIstRawHitMaker ..." << endm;
-   Int_t ierr = kStOk;
 
-   //prepare output data collection
-   m_DataSet = new TObjectSet("istRawHitAndCluster");
+   if(SAttr("CalibrationMode")) setIsCalibrationMode(IAttr("CalibrationMode"));
+   if(IAttr("EmbeddingMode")) setDoEmbedding(IAttr("EmbeddingMode"));
+   if(IAttr("DataType")) setDataType(IAttr("DataType"));
+   if(SAttr("HitCut")) setHitCut(DAttr("HitCut"));
+   if(SAttr("CmnCorrection")) setCmnCorrection(IAttr("CmnCorrection"));
+   if(SAttr("CmnCut")) setCmnCut(DAttr("CmnCut"));
 
-   mIstCollectionPtr = new StIstCollection();
-   ((TObjectSet *) m_DataSet)->AddObject(mIstCollectionPtr);
-
-   if ( ierr || !mIstCollectionPtr ) {
-      LOG_WARN << "Error constructing istCollection" << endm;
-      ierr = kStWarn;
-   }
-
-   return ierr;
+   return kStOk;
 }
 
 
@@ -196,6 +189,10 @@ Int_t StIstRawHitMaker::InitRun(Int_t runnumber)
 Int_t StIstRawHitMaker::Make()
 {
    Int_t ierr = kStOk;
+
+   LOG_INFO<<"mDoEmbedding = "<<mDoEmbedding<<" mDataType = "<<mDataType<<endm;
+   mIstCollectionPtr = new StIstCollection();
+   ToWhiteBoard("istRawHitAndCluster",mIstCollectionPtr);
 
    //access raw ADC containers from simu data
    TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
@@ -478,6 +475,17 @@ void StIstRawHitMaker::FillRawHitCollectionFromAPVData(unsigned char dataFlag, i
                rawHitPtr->setGeoId( geoId );
                rawHitPtr->setMaxTimeBin( tempMaxTB );
                rawHitPtr->setDefaultTimeBin( mDefaultTimeBin );
+               if(mIstCollectionSimuPtr)
+               {
+                  StIstRawHitCollection *rawHitCollectionSimuPtr = mIstCollectionSimuPtr->getRawHitCollection(ladder-1);
+                  if(rawHitCollectionSimuPtr)
+                  {
+                     StIstRawHit *rawHitSimu = rawHitCollectionSimuPtr->getRawHit(elecId);
+                     rawHitPtr->setIdTruth(rawHitSimu->getIdTruth());
+                  }
+               }
+
+               LOG_DEBUG<<"rawHit id = "<<elecId<<" charge = "<<(float)rawHitPtr->getCharge(rawHitPtr->getMaxTimeBin())<<" idTruth = "<<(int)rawHitPtr->getIdTruth()<<endm;
             }//end raw hit decision cut
          }//end filling hit info
       }
@@ -512,10 +520,10 @@ void StIstRawHitMaker::FillRawHitCollectionFromSimData()
 void StIstRawHitMaker::Clear( Option_t *opts )
 {
    if (mIstCollectionPtr ) {
-      for ( unsigned char i = 0; i < kIstNumLadders; ++i ) {
-         mIstCollectionPtr->getRawHitCollection(i)->Clear( "" );
-      }
+      delete mIstCollectionPtr;
+      mIstCollectionPtr = 0;
    }
+   return StMaker::Clear();
 }
 
 ClassImp(StIstRawHitMaker)
@@ -524,6 +532,11 @@ ClassImp(StIstRawHitMaker)
 /***************************************************************************
 *
 * $Log: StIstRawHitMaker.cxx,v $
+* Revision 1.5  2015/12/15 17:26:46  huangbc
+* Swith the initialization of raw hit collection to STAR standard way. Clean up the dtor.
+* Setters use SAttr to read the values.
+* Add idTruth for simulated hits, which is missing in last version.
+*
 * Revision 1.33  2015/08/06 17:48:10  smirnovd
 * StIstRawHitMaker: Removed unused variable
 *
