@@ -8,8 +8,8 @@
 * See header file.
 ****************************************************************************/
 
-#include "StIstConsts.h"
-#include "StIstCollection.h"
+#include "StIstUtil/StIstConsts.h"
+#include "StIstUtil/StIstCollection.h"
 
 //constructor
 StIstCollection::StIstCollection() : StObject()

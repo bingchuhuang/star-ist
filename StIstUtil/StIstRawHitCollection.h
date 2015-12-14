@@ -12,8 +12,8 @@
 #ifndef StIstRawHitCollection_hh
 #define StIstRawHitCollection_hh
 
-#include "StObject.h"
-#include "StIstRawHit.h"
+#include "St_base/StObject.h"
+#include "StIstUtil/StIstRawHit.h"
 #include <algorithm>
 
 class StIstRawHitCollection : public StObject

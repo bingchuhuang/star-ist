@@ -3,8 +3,8 @@
 
 #include <climits>
 
-#include "StMaker.h"
-#include "StIstIClusterAlgo.h"
+#include "StChain/StMaker.h"
+#include "StIstClusterMaker/StIstIClusterAlgo.h"
 
 class StIstCollection;
 

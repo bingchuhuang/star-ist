@@ -8,9 +8,9 @@
 * See header file.
 ****************************************************************************/
 
-#include "StIstConsts.h"
-#include "StIstCluster.h"
-#include "StRoot/St_base/StMessMgr.h"
+#include "StIstUtil/StIstConsts.h"
+#include "StIstUtil/StIstCluster.h"
+#include "St_base/StMessMgr.h"
 
 
 StIstCluster::StIstCluster(int key, int ladder, int sensor,

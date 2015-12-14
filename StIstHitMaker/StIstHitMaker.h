@@ -3,7 +3,7 @@
 #ifndef StIstHitMaker_hh
 #define StIstHitMaker_hh
 
-#include "StMaker.h"
+#include "StChain/StMaker.h"
 
 class THashList;
 

@@ -1,13 +1,13 @@
-#include "StEvent.h"
+#include "StEvent/StEvent.h"
 #include "StEvent/StEnumerations.h"
-#include "StMessMgr.h"
-#include "StIstScanClusterAlgo.h"
-#include "StRoot/StIstUtil/StIstCollection.h"
-#include "StRoot/StIstUtil/StIstRawHitCollection.h"
-#include "StRoot/StIstUtil/StIstRawHit.h"
-#include "StRoot/StIstUtil/StIstClusterCollection.h"
-#include "StRoot/StIstUtil/StIstCluster.h"
-#include "StRoot/StIstUtil/StIstConsts.h"
+#include "St_base/StMessMgr.h"
+#include "StIstClusterMaker/StIstScanClusterAlgo.h"
+#include "StIstUtil/StIstCollection.h"
+#include "StIstUtil/StIstRawHitCollection.h"
+#include "StIstUtil/StIstRawHit.h"
+#include "StIstUtil/StIstClusterCollection.h"
+#include "StIstUtil/StIstCluster.h"
+#include "StIstUtil/StIstConsts.h"
 
 #include <math.h>
 #include <iostream>

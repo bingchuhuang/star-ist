@@ -1,8 +1,8 @@
 #ifndef StIstClusterCollection_hh
 #define StIstClusterCollection_hh
 
-#include "StObject.h"
-#include "StIstCluster.h"
+#include "St_base/StObject.h"
+#include "StIstUtil/StIstCluster.h"
 
 
 /**

@@ -1,7 +1,7 @@
 #ifndef StIstScanClusterAlgo_hh
 #define StIstScanClusterAlgo_hh
 
-#include "StRoot/StIstClusterMaker/StIstIClusterAlgo.h"
+#include "StIstClusterMaker/StIstIClusterAlgo.h"
 
 class StIstCollection;
 class StIstRawHitCollection;

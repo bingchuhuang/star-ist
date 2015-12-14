@@ -4,9 +4,9 @@
 * Author: Yaping Wang, March 2013
 ****************************************************************************/
 
-#include "StIstRawHit.h"
-#include "StIstRawHitCollection.h"
-#include "StRoot/St_base/StMessMgr.h"
+#include "StIstUtil/StIstRawHit.h"
+#include "StIstUtil/StIstRawHitCollection.h"
+#include "St_base/StMessMgr.h"
 #include <cmath>
 #include <iostream>
 

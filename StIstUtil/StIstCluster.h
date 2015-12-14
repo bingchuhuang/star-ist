@@ -13,8 +13,8 @@
 
 #include <map>
 
-#include "StObject.h"
-#include "StIstRawHit.h"
+#include "St_base/StObject.h"
+#include "StIstUtil/StIstRawHit.h"
 
 class StIstCluster: public TObject
 {

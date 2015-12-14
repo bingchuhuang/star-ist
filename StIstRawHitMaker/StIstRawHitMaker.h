@@ -16,8 +16,8 @@
 #ifndef StIstRawHitMaker_hh
 #define StIstRawHitMaker_hh
 
-#include "StRoot/St_base/Stypes.h"
-#include "StRoot/StChain/StRTSBaseMaker.h"
+#include "St_base/Stypes.h"
+#include "StChain/StRTSBaseMaker.h"
 
 #include <vector>
 #include <string>

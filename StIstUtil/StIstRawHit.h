@@ -11,9 +11,9 @@
 #ifndef StIstRawHit_hh
 #define StIstRawHit_hh
 
-#include "StObject.h"
+#include "St_base/StObject.h"
 #include "StEvent/StEnumerations.h"
-#include "StIstConsts.h"
+#include "StIstUtil/StIstConsts.h"
 
 class StIstRawHit : public StObject
 {
