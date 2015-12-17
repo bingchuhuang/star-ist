@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id: StIstRawHitMaker.h,v 1.4 2015/12/15 17:26:46 huangbc Exp $
+* $Id: StIstRawHitMaker.h,v 1.5 2015/12/16 21:16:48 perev Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -37,18 +37,18 @@ public:
    Int_t Make();
    void Clear( Option_t *opts = "" );
 
-   void setIsCalibrationMode( bool isCaliMode = false )   { mIsCaliMode = isCaliMode;}
-   void setHitCut(float hitCut = 5.)			{ mHitCut = hitCut;        }
+   void setIsCalibrationMode( bool isCaliMode = false )   	{ mIsCaliMode = isCaliMode;}
+   void setHitCut(float hitCut = 5.)				{ mHitCut = hitCut;        }
    void setCmnCorrection( bool doCmnCorrection = false )	{ mDoCmnCorrection = doCmnCorrection; }
-   void setCmnCut(float cmnCut = 3.)			{ mCmnCut = cmnCut;        }
+   void setCmnCut(float cmnCut = 3.)				{ mCmnCut = cmnCut;        }
    /// 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
-   void setDataType(int nDataType = 0)		{ mDataType = nDataType;   };
-   void setDoEmbedding(Bool_t doIt) {mDoEmbedding = doIt;}
+   void setDataType(int nDataType = 0)				{ mDataType = nDataType;   };
+   void setDoEmbedding(Bool_t doIt=false) 			{mDoEmbedding = doIt;}
    UChar_t getDataType() {return mDataType;} // 0 - All data; 1 - non-ZS data; 2 - ZS data; 3 - ZS first data
 
    // Get CVS
    virtual const char *GetCVS() const {
-      static const char cvs[] = "Tag $Name:  $ $Id: StIstRawHitMaker.h,v 1.4 2015/12/15 17:26:46 huangbc Exp $ built " __DATE__ " " __TIME__  ;
+      static const char cvs[] = "Tag $Name:  $ $Id: StIstRawHitMaker.h,v 1.5 2015/12/16 21:16:48 perev Exp $ built " __DATE__ " " __TIME__  ;
       return cvs;
    }
 
@@ -90,6 +90,9 @@ private:
 /***************************************************************************
 *
 * $Log: StIstRawHitMaker.h,v $
+* Revision 1.5  2015/12/16 21:16:48  perev
+* Few small simplifications of maker to maker comminication
+*
 * Revision 1.4  2015/12/15 17:26:46  huangbc
 * Swith the initialization of raw hit collection to STAR standard way. Clean up the dtor.
 * Setters use SAttr to read the values.

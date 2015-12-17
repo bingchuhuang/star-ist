@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-* $Id: StIstRawHitMaker.cxx,v 1.5 2015/12/15 17:26:46 huangbc Exp $
+* $Id: StIstRawHitMaker.cxx,v 1.6 2015/12/16 21:16:48 perev Exp $
 *
 * Author: Yaping Wang, March 2013
 ****************************************************************************
@@ -53,13 +53,22 @@ StIstRawHitMaker::StIstRawHitMaker( const char *name ): StRTSBaseMaker( "ist", n
 Int_t StIstRawHitMaker::Init()
 {
    LOG_INFO << "Initializing StIstRawHitMaker ..." << endm;
-
+// 		First of all default setting
+   setIsCalibrationMode();
+   setDoEmbedding();
+   setDataType();
+   setHitCut();
+   setCmnCorrection();
+   setCmnCorrection();
+   setCmnCut();
+//		If BFChain is going to change the default  
+   
    if(SAttr("CalibrationMode")) setIsCalibrationMode(IAttr("CalibrationMode"));
-   if(IAttr("EmbeddingMode")) setDoEmbedding(IAttr("EmbeddingMode"));
-   if(IAttr("DataType")) setDataType(IAttr("DataType"));
-   if(SAttr("HitCut")) setHitCut(DAttr("HitCut"));
-   if(SAttr("CmnCorrection")) setCmnCorrection(IAttr("CmnCorrection"));
-   if(SAttr("CmnCut")) setCmnCut(DAttr("CmnCut"));
+   if(IAttr("EmbeddingMode")) 	setDoEmbedding(IAttr("EmbeddingMode"));
+   if(IAttr("DataType")) 	setDataType(IAttr("DataType"));
+   if(SAttr("HitCut")) 		setHitCut(DAttr("HitCut"));
+   if(SAttr("CmnCorrection")) 	setCmnCorrection(IAttr("CmnCorrection"));
+   if(SAttr("CmnCut")) 		setCmnCut(DAttr("CmnCut"));
 
    return kStOk;
 }
@@ -73,7 +82,7 @@ Int_t StIstRawHitMaker::InitRun(Int_t runnumber)
 {
    Int_t ierr = kStOk;
 
-   TObjectSet *istDbDataSet = (TObjectSet *)GetDataSet("ist_db");
+   auto *istDbDataSet = GetDataSet("ist_db");
    StIstDb *mIstDb = NULL;
 
    if (istDbDataSet) {
@@ -192,10 +201,10 @@ Int_t StIstRawHitMaker::Make()
 
    LOG_INFO<<"mDoEmbedding = "<<mDoEmbedding<<" mDataType = "<<mDataType<<endm;
    mIstCollectionPtr = new StIstCollection();
-   ToWhiteBoard("istRawHitAndCluster",mIstCollectionPtr);
+   ToWhiteBoard("istRawHitAndCluster",mIstCollectionPtr,true);
 
    //access raw ADC containers from simu data
-   TObjectSet* istSimuDataSet = (TObjectSet*)GetDataSet("istRawAdcSimu");
+   auto *istSimuDataSet = GetDataSet("istRawAdcSimu");
    if ( !istSimuDataSet ) {
       LOG_WARN << "StIstRawHitMaker::Make() - No raw ADC dataset found from simu data! " << endm;
    }
@@ -519,10 +528,8 @@ void StIstRawHitMaker::FillRawHitCollectionFromSimData()
 
 void StIstRawHitMaker::Clear( Option_t *opts )
 {
-   if (mIstCollectionPtr ) {
-      delete mIstCollectionPtr;
-      mIstCollectionPtr = 0;
-   }
+//		mIstCollectionPtr will be deleted in Clear but not zeroed. Do it now
+   mIstCollectionPtr = 0;
    return StMaker::Clear();
 }
 
@@ -532,6 +539,9 @@ ClassImp(StIstRawHitMaker)
 /***************************************************************************
 *
 * $Log: StIstRawHitMaker.cxx,v $
+* Revision 1.6  2015/12/16 21:16:48  perev
+* Few small simplifications of maker to maker comminication
+*
 * Revision 1.5  2015/12/15 17:26:46  huangbc
 * Swith the initialization of raw hit collection to STAR standard way. Clean up the dtor.
 * Setters use SAttr to read the values.
